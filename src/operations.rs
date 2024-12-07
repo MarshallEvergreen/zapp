@@ -1,3 +1,7 @@
-pub fn add(arg_1: i32, arg_2: i32) -> i32 {
-    return arg_1 + arg_2;
+pub fn add(a: i32, b: i32) -> i32 {
+    return a + b;
+}
+
+pub fn subtract(a: i32, b: i32) -> i32 {
+    a - b
 }
