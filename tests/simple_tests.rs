@@ -1,6 +1,5 @@
-use std::default;
-
-use vfs::{MemoryFS, PhysicalFS, SeekAndWrite, VfsPath};
+use super_duper_octo_lamp::entry::abinit;
+use vfs::{MemoryFS, SeekAndWrite, VfsPath};
 
 #[test]
 fn test_simple_setup() {
@@ -28,19 +27,21 @@ def hello_world():
 
     // Assert
 
+    let expected_interface: &str = r#"
+from .hello_world import hello_world
+"#;
+
     // Read the file back to verify its contents
     let mut reader = memfs
         .join("__init__.py")
         .expect("Failed to create path")
         .open_file()
         .expect("Failed to open file");
+
     let mut contents = String::new();
     reader
         .read_to_string(&mut contents)
         .expect("Failed to read file");
-}
 
-fn abinit(fs: Option<&VfsPath>) {
-    let default_fs: VfsPath = PhysicalFS::new("/").into();
-    let _fs = fs.unwrap_or(&default_fs);
+    assert_eq!(contents, expected_interface);
 }
