@@ -23,7 +23,7 @@ def hello_world():
 
     // Act
 
-    abinit(Some(&memfs));
+    abinit(Some(&memfs)).expect("Execution error.");
 
     // Assert
 
