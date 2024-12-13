@@ -5,7 +5,7 @@ struct MyFixture {
 
 impl ConsumableFixture for MyFixture {
     fn set_up() -> googletest::Result<Self> {
-        todo!()
+        return Ok(MyFixture { common_data: 42 });
     }
 }
 
