@@ -1,5 +1,8 @@
 {
     "cSpell.words": [
-        "abinit"
+        "abinit",
+        "googletest",
+        "gtest",
+        "teardown"
     ]
 }
