@@ -1,5 +1,6 @@
 use super::interface::{ApiVisitor, IPythonLayer};
 
+#[derive(Debug)]
 pub struct PythonDirectory {}
 
 impl PythonDirectory {

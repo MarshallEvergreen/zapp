@@ -1,10 +1,13 @@
 use super::interface::{ApiVisitor, IPythonLayer};
 
-pub struct PythonFile {}
+#[derive(Debug)]
+pub struct PythonFile {
+    pub filepath: String,
+}
 
 impl PythonFile {
-    pub fn new() -> Self {
-        PythonFile {}
+    pub fn new(filepath: String) -> Self {
+        PythonFile { filepath }
     }
 }
 
