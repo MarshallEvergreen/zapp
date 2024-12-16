@@ -1,7 +1,7 @@
 use googletest::prelude::*;
 use vfs::{MemoryFS, VfsPath, VfsResult};
-struct TestVisitingFileTree {
-    memfs: VfsPath,
+pub struct TestVisitingFileTree {
+    pub memfs: VfsPath,
 }
 
 impl TestVisitingFileTree {
