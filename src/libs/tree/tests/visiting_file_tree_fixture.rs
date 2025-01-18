@@ -1,5 +1,7 @@
 use googletest::prelude::*;
 use vfs::{MemoryFS, VfsPath, VfsResult};
+
+use crate::libs::tree::directory::PythonDirectory;
 pub struct TestVisitingFileTree {
     pub memfs: VfsPath,
 }
@@ -12,6 +14,10 @@ impl TestVisitingFileTree {
         _parent.create_dir_all()?;
         filepath.create_file()?;
         Ok(())
+    }
+
+    pub fn root_dir(&self) -> PythonDirectory {
+        return PythonDirectory::new(&self.memfs).unwrap();
     }
 }
 

@@ -16,14 +16,11 @@ fn test_python_directory_containing_top_level_python_files_is_valid(
     fixture.create_file(file_2)?;
 
     // Act
-    let python_dir: PythonDirectory = match PythonDirectory::new(&fixture.memfs) {
-        Ok(dir) => dir,
-        Err(err) => return fail!("Failed to create PythonDirectory: {:?}", err),
-    };
+    let root: PythonDirectory = fixture.root_dir();
 
     // Assert
 
-    verify_that!(python_dir.is_valid(), eq(true))
+    verify_that!(root.is_valid(), eq(true))
 }
 
 #[gtest]
@@ -38,14 +35,11 @@ fn test_python_directory_containing_no_top_level_python_files_is_valid(
     fixture.create_file(file_2)?;
 
     // Act
-    let python_dir: PythonDirectory = match PythonDirectory::new(&fixture.memfs) {
-        Ok(dir) => dir,
-        Err(err) => return fail!("Failed to create PythonDirectory: {:?}", err),
-    };
+    let root: PythonDirectory = fixture.root_dir();
 
     // Assert
 
-    verify_that!(python_dir.is_valid(), eq(false))
+    verify_that!(root.is_valid(), eq(false))
 }
 
 #[gtest]
@@ -60,12 +54,9 @@ fn test_python_directory_containing_mixture_of_files_is_still_valid(
     fixture.create_file(file_2)?;
 
     // Act
-    let python_dir: PythonDirectory = match PythonDirectory::new(&fixture.memfs) {
-        Ok(dir) => dir,
-        Err(err) => return fail!("Failed to create PythonDirectory: {:?}", err),
-    };
+    let root: PythonDirectory = fixture.root_dir();
 
     // Assert
 
-    verify_that!(python_dir.is_valid(), eq(true))
+    verify_that!(root.is_valid(), eq(true))
 }
