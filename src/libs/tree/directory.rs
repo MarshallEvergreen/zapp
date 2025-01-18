@@ -1,6 +1,5 @@
 use super::interface::{ApiVisitor, IPythonLayer};
 
-#[derive(Debug)]
 pub struct PythonDirectory {}
 
 impl PythonDirectory {
@@ -15,7 +14,7 @@ impl IPythonLayer for PythonDirectory {
         todo!()
     }
 
-    fn accept(&self, visitor: &ApiVisitor) {
+    fn accept(&self, _visitor: &ApiVisitor) {
         todo!()
     }
 }

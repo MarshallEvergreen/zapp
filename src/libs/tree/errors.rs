@@ -1,6 +1,7 @@
 use std::fmt;
 
 pub enum TreeError {
+    FileSystemCreationError,
     FileCreationError,
     DirectoryCreationError,
     WalkDirectoryError,
@@ -14,6 +15,7 @@ impl fmt::Debug for TreeError {
                 write!(f, "Invalid path type for layer creation")
             }
             TreeError::WalkDirectoryError => write!(f, "Invalid path type for layer creation"),
+            TreeError::FileSystemCreationError => write!(f, "Failed to create file system"),
         }
     }
 }

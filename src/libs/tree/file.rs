@@ -1,6 +1,5 @@
 use super::interface::{ApiVisitor, IPythonLayer};
 
-#[derive(Debug)]
 pub struct PythonFile {
     pub filepath: String,
 }
@@ -17,7 +16,7 @@ impl IPythonLayer for PythonFile {
         todo!()
     }
 
-    fn accept(&self, visitor: &ApiVisitor) {
+    fn accept(&self, _visitor: &ApiVisitor) {
         todo!()
     }
 }

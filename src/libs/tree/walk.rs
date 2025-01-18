@@ -1,10 +1,26 @@
+use std::path::PathBuf;
+
 use vfs::{PhysicalFS, VfsPath, VfsResult};
 
 use super::{errors::TreeError, factory::layer_factory, interface::IPythonLayer};
 
-pub fn walk(fs: Option<&VfsPath>) -> Result<(), TreeError> {
-    let default_fs: VfsPath = PhysicalFS::new("/").into();
-    let root = fs.unwrap_or(&default_fs);
+pub fn walk(fs: Option<VfsPath>) -> Result<(), TreeError> {
+    let root: VfsPath;
+    let cwd: PathBuf = std::env::current_dir().map_err(|_| TreeError::FileSystemCreationError)?;
+
+    if fs.is_some() {
+        tracing::info!("File system provided.");
+        root = fs.unwrap();
+    } else {
+        tracing::warn!("No file system provided, using default.");
+        tracing::info!(
+            "Using current working directory as root: '{}'",
+            cwd.display()
+        );
+        root = PhysicalFS::new(cwd).into();
+    }
+
+    tracing::info!("Root file system path: {}", root.as_str());
 
     let mut _filepaths: Vec<VfsPath> = root
         .walk_dir()
