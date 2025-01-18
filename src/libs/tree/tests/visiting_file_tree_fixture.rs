@@ -1,7 +1,8 @@
 use googletest::prelude::*;
 use vfs::{MemoryFS, VfsPath, VfsResult};
 
-use crate::libs::tree::directory::PythonDirectory;
+use crate::libs::tree::{directory::PythonDirectory, errors::TreeResult};
+
 pub struct TestVisitingFileTree {
     pub memfs: VfsPath,
 }
@@ -13,6 +14,12 @@ impl TestVisitingFileTree {
         let _parent = filepath.parent();
         _parent.create_dir_all()?;
         filepath.create_file()?;
+        Ok(())
+    }
+
+    pub fn write_to_file(&self, name: &str, content: &str) -> VfsResult<()> {
+        let mut writer: Box<dyn vfs::SeekAndWrite + Send> = self.memfs.join(name)?.create_file()?;
+        writer.write_all(content.as_bytes())?;
         Ok(())
     }
 

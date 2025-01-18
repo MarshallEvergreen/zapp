@@ -4,7 +4,7 @@ use vfs::VfsPath;
 
 use super::{
     api_file::PythonApiFile,
-    errors::TreeError,
+    errors::TreeResult,
     factory::layer_factory,
     interface::{ApiVisitor, IPythonLayer, RunResult},
 };
@@ -18,7 +18,7 @@ pub struct PythonDirectory {
 }
 
 impl PythonDirectory {
-    pub fn new(root: &VfsPath) -> Result<Self, TreeError> {
+    pub fn new(root: &VfsPath) -> TreeResult<PythonDirectory> {
         let paths: Vec<VfsPath> = root
             .read_dir()?
             .filter_map(|p| {

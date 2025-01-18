@@ -2,9 +2,13 @@ use std::path::PathBuf;
 
 use vfs::{PhysicalFS, VfsPath};
 
-use super::{errors::TreeError, factory::layer_factory, interface::IPythonLayer};
+use super::{
+    errors::{TreeError, TreeResult},
+    factory::layer_factory,
+    interface::IPythonLayer,
+};
 
-pub fn walk(fs: Option<&VfsPath>) -> Result<(), TreeError> {
+pub fn walk(fs: Option<&VfsPath>) -> TreeResult<()> {
     let root: &VfsPath;
 
     // null pointer - only created if no file system is provided
