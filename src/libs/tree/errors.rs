@@ -4,6 +4,8 @@ use vfs::VfsError;
 pub enum TreeError {
     VfsError(VfsError),
     FileSystemCreationError,
+    RootDirectoryCreationError(String),
+    DirectoryWithoutInitError(String),
 }
 
 impl From<VfsError> for TreeError {

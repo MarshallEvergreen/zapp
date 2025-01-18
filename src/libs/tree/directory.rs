@@ -3,24 +3,32 @@ use std::collections::{HashMap, HashSet};
 use vfs::VfsPath;
 
 use super::{
+    api_file::PythonApiFile,
     errors::TreeError,
     factory::layer_factory,
-    file::PythonFile,
     interface::{ApiVisitor, IPythonLayer, RunResult},
 };
 
+const INIT_PY: &str = "__init__.py";
+
 pub struct PythonDirectory {
-    init_file: PythonFile,
+    init_file: PythonApiFile,
     layers: Vec<Box<dyn IPythonLayer>>,
     pub name: String,
 }
 
 impl PythonDirectory {
     pub fn new(root: &VfsPath) -> Result<Self, TreeError> {
-        let _init_file = PythonFile::new(root.join("__init__.py")?);
-
-        let mut paths: Vec<VfsPath> = root.read_dir()?.collect();
-        paths.sort_by_key(|path| path.as_str().to_string());
+        let paths: Vec<VfsPath> = root
+            .read_dir()?
+            .filter_map(|p| {
+                if p.filename().eq(INIT_PY) {
+                    None
+                } else {
+                    Some(p)
+                }
+            })
+            .collect();
 
         // TODO handle errors better here.
         let _layers: Vec<Box<dyn IPythonLayer>> = paths
@@ -29,7 +37,7 @@ impl PythonDirectory {
             .collect();
 
         Ok(PythonDirectory {
-            init_file: PythonFile::new(root.join("__init__.py")?),
+            init_file: PythonApiFile::new(root.join(INIT_PY)?),
             layers: _layers,
             name: root.as_str().to_string(),
         })

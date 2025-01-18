@@ -2,8 +2,8 @@ use std::path::PathBuf;
 
 use vfs::{PhysicalFS, VfsPath};
 
-use super::{directory::PythonDirectory, errors::TreeError, interface::IPythonLayer};
-use std::collections::HashMap;
+use super::{errors::TreeError, factory::layer_factory, interface::IPythonLayer};
+
 pub fn walk(fs: Option<&VfsPath>) -> Result<(), TreeError> {
     let root: &VfsPath;
 
@@ -25,22 +25,11 @@ pub fn walk(fs: Option<&VfsPath>) -> Result<(), TreeError> {
         root = _default_fs.as_ref();
     }
 
-    let mut _python_file_paths: HashMap<String, VfsPath> = root
-        .walk_dir()?
-        .filter_map(|entry| {
-            let entry: VfsPath = entry.ok()?;
-            if entry.is_file().ok()? && entry.extension().is_some_and(|e| e == "py") {
-                let parent = entry.parent();
-                Some((parent.as_str().to_string(), parent))
-            } else {
-                None
-            }
-        })
-        .collect();
+    let _root_directory: Box<dyn IPythonLayer> = layer_factory(root)?.ok_or_else(|| {
+        TreeError::RootDirectoryCreationError(format!("Failed to create root directory layer",))
+    })?;
 
-    let _root_directory: Box<dyn IPythonLayer> = Box::new(PythonDirectory::new(root)?);
-
-    _root_directory.run();
+    _root_directory.run()?;
 
     Ok(())
 }

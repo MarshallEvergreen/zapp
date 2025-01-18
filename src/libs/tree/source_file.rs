@@ -3,28 +3,19 @@ use vfs::VfsPath;
 use super::interface::{ApiVisitor, IPythonLayer, RunResult};
 use regex::Regex;
 use std::collections::HashSet;
-use std::fmt;
 
-pub struct PythonFile {
+pub struct PythonSourceFile {
     pub filepath: VfsPath,
 }
 
-impl fmt::Debug for PythonFile {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("PythonFile")
-            .field("filepath", &self.filepath)
-            .finish()
-    }
-}
-
-impl PythonFile {
+impl PythonSourceFile {
     pub fn new(filepath: VfsPath) -> Self {
-        PythonFile { filepath }
+        PythonSourceFile { filepath }
     }
 }
 
 // Implement ITask for MyTask
-impl IPythonLayer for PythonFile {
+impl IPythonLayer for PythonSourceFile {
     fn name(&self) -> String {
         self.filepath.as_str().to_string()
     }

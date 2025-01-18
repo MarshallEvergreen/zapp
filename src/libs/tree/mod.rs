@@ -1,8 +1,9 @@
+pub mod api_file;
 pub mod directory;
 pub mod errors;
 pub mod factory;
-pub mod file;
 pub mod interface;
+pub mod source_file;
 pub mod walk;
 
 #[cfg(test)]

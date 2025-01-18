@@ -1,3 +1,4 @@
+use indoc::indoc;
 use super_duper_octo_lamp::entry::abinit;
 use vfs::{MemoryFS, SeekAndWrite, VfsPath};
 
@@ -12,10 +13,10 @@ fn test_simple_setup() {
         .create_file()
         .expect("Failed to create file");
 
-    let python_hello_world: &str = r#"
-def hello_world():
-    print("Hello World!")
-"#;
+    let python_hello_world: &str = indoc! {r#"
+        def hello_world():
+            print("Hello World!")
+    "#};
 
     writer
         .write_all(python_hello_world.as_bytes())
