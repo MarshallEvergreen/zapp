@@ -50,11 +50,11 @@ impl IPythonLayer for PythonDirectory {
         self.name.clone()
     }
 
-    fn run(&self) -> RunResult {
+    fn api(&self) -> RunResult {
         let mut submodule_apis: HashMap<String, HashSet<String>> = HashMap::new();
 
         for layer in &self.layers {
-            let api = layer.run()?;
+            let api = layer.api()?;
             submodule_apis.insert(layer.name(), api);
         }
 

@@ -19,7 +19,7 @@ impl IPythonLayer for PythonApiFile {
         self.filepath.as_str().to_string()
     }
 
-    fn run(&self) -> RunResult {
+    fn api(&self) -> RunResult {
         let public_api = HashSet::new();
 
         Ok(public_api)

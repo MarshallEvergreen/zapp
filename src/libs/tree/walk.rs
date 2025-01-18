@@ -33,7 +33,7 @@ pub fn walk(fs: Option<&VfsPath>) -> TreeResult<()> {
         TreeError::RootDirectoryCreationError(format!("Failed to create root directory layer",))
     })?;
 
-    _root_directory.run()?;
+    _root_directory.api()?;
 
     Ok(())
 }

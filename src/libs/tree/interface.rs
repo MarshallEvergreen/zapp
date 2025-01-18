@@ -14,7 +14,7 @@ pub type RunResult = Result<HashSet<String>, TreeError>;
 
 pub trait IPythonLayer {
     fn name(&self) -> String;
-    fn run(&self) -> RunResult;
+    fn api(&self) -> RunResult;
     fn is_valid(&self) -> bool;
     fn accept(&self, visitor: &ApiVisitor);
 }

@@ -20,7 +20,7 @@ impl IPythonLayer for PythonSourceFile {
         self.filepath.as_str().to_string()
     }
 
-    fn run(&self) -> RunResult {
+    fn api(&self) -> RunResult {
         let contents = self.filepath.read_to_string()?;
         let re = Regex::new(r"__all__\s*=\s*\[(.*?)\]").unwrap();
         let re_multiline = Regex::new(r"__all__\s*=\s*\[(?s)(.*?)\]").unwrap();
