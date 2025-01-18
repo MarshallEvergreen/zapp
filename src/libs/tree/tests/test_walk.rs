@@ -45,7 +45,7 @@ fn create_api_created_if_root_directory_is_valid(fixture: TestVisitingFileTree) 
     // Assert
 
     let expected_contents = indoc! {r#"
-        from .python_1 import hello_world"
+        from .python_1 import (hello_world)
     "#};
 
     let actual_contents: String = fixture.read_file("__init__.py")?;

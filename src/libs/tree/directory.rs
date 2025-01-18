@@ -58,6 +58,8 @@ impl IPythonLayer for PythonDirectory {
             submodule_apis.insert(layer.name(), api);
         }
 
+        self.init_file.write(&submodule_apis)?;
+
         let public_api: HashSet<String> = submodule_apis.values().cloned().flatten().collect();
 
         tracing::info!("Public API for {}: {:?}", self.name(), public_api);

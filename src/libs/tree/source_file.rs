@@ -17,7 +17,15 @@ impl PythonSourceFile {
 // Implement ITask for MyTask
 impl IPythonLayer for PythonSourceFile {
     fn name(&self) -> String {
-        self.filepath.as_str().to_string()
+        // Whether or not to do relative imports can be controlled here.
+
+        return self
+            .filepath
+            .filename()
+            .split('.')
+            .next()
+            .unwrap()
+            .to_string();
     }
 
     fn api(&self) -> RunResult {

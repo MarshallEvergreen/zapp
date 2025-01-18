@@ -1,7 +1,8 @@
+use std::collections::{HashMap, HashSet};
+
 use vfs::VfsPath;
 
-use super::interface::{ApiVisitor, IPythonLayer, RunResult};
-use std::collections::HashSet;
+use super::errors::TreeError;
 
 pub struct PythonApiFile {
     pub filepath: VfsPath,
@@ -11,25 +12,29 @@ impl PythonApiFile {
     pub fn new(filepath: VfsPath) -> Self {
         PythonApiFile { filepath }
     }
-}
 
-// Implement ITask for MyTask
-impl IPythonLayer for PythonApiFile {
-    fn name(&self) -> String {
-        self.filepath.as_str().to_string()
-    }
+    pub fn write(&self, api: &HashMap<String, HashSet<String>>) -> Result<(), TreeError> {
+        let mut content = String::new();
 
-    fn api(&self) -> RunResult {
-        let public_api = HashSet::new();
+        for (key, values) in api {
+            let values_str = values
+                .iter()
+                .map(String::as_str)
+                .collect::<Vec<_>>()
+                .join(", ");
 
-        Ok(public_api)
-    }
+            content.push_str(&format!(
+                "from .{} import ({})\n",
+                key.replace("/", "."),
+                values_str
+            ));
+        }
 
-    fn accept(&self, _visitor: &ApiVisitor) {
-        todo!()
-    }
+        self.filepath
+            .create_file()?
+            .write_all(content.as_bytes())
+            .map_err(|_| TreeError::FileSystemCreationError)?;
 
-    fn is_valid(&self) -> bool {
-        return true;
+        Ok(())
     }
 }
