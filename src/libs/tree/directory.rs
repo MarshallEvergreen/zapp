@@ -4,7 +4,7 @@ use super::{
     errors::TreeError,
     factory::layer_factory,
     file::PythonFile,
-    interface::{ApiVisitor, IPythonLayer},
+    interface::{ApiVisitor, IPythonLayer, RunResult},
 };
 
 pub struct PythonDirectory {
@@ -34,10 +34,11 @@ impl PythonDirectory {
 
 // Implement ITask for MyTask
 impl IPythonLayer for PythonDirectory {
-    fn run(&self) {
+    fn run(&self) -> RunResult {
         for layer in &self.layers {
-            layer.run();
+            layer.run()?;
         }
+        Ok(Default::default())
     }
 
     fn is_valid(&self) -> bool {

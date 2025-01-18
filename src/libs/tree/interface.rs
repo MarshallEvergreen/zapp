@@ -1,3 +1,7 @@
+use std::collections::HashSet;
+
+use super::errors::TreeError;
+
 pub struct ApiVisitor {}
 
 impl ApiVisitor {
@@ -6,8 +10,10 @@ impl ApiVisitor {
     }
 }
 
+pub type RunResult = Result<HashSet<String>, TreeError>;
+
 pub trait IPythonLayer {
-    fn run(&self);
+    fn run(&self) -> RunResult;
 
     fn is_valid(&self) -> bool;
 
