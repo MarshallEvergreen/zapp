@@ -14,7 +14,7 @@ const INIT_PY: &str = "__init__.py";
 pub struct PythonDirectory {
     init_file: PythonApiFile,
     layers: Vec<Box<dyn IPythonLayer>>,
-    pub name: String,
+    name: String,
 }
 
 impl PythonDirectory {
@@ -39,7 +39,7 @@ impl PythonDirectory {
         Ok(PythonDirectory {
             init_file: PythonApiFile::new(root.join(INIT_PY)?),
             layers: _layers,
-            name: root.as_str().to_string(),
+            name: root.filename().to_string(),
         })
     }
 }

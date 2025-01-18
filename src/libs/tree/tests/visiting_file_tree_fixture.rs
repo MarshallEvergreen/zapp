@@ -1,5 +1,5 @@
 use googletest::prelude::*;
-use vfs::{MemoryFS, VfsPath, VfsResult};
+use vfs::{MemoryFS, SeekAndWrite, VfsPath, VfsResult};
 
 use crate::libs::tree::directory::PythonDirectory;
 
@@ -9,16 +9,15 @@ pub struct TestVisitingFileTree {
 
 impl TestVisitingFileTree {
     // Example method that performs some operation on common_data
-    pub fn create_file(&self, name: &str) -> VfsResult<()> {
+    pub fn create_file(&self, name: &str) -> VfsResult<Box<dyn SeekAndWrite + Send>> {
         let filepath = self.memfs.join(name)?;
         let _parent = filepath.parent();
         _parent.create_dir_all()?;
-        filepath.create_file()?;
-        Ok(())
+        return filepath.create_file();
     }
 
     pub fn write_to_file(&self, name: &str, content: &str) -> VfsResult<()> {
-        let mut writer: Box<dyn vfs::SeekAndWrite + Send> = self.memfs.join(name)?.create_file()?;
+        let mut writer: Box<dyn vfs::SeekAndWrite + Send> = self.create_file(name)?;
         writer.write_all(content.as_bytes())?;
         Ok(())
     }
