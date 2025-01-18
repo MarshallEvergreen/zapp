@@ -1,8 +1,9 @@
 use googletest::prelude::*;
 
-use crate::libs::tree::{directory::PythonDirectory, interface::IPythonLayer};
-
-use super::visiting_file_tree_fixture::TestVisitingFileTree;
+use crate::libs::tree::{
+    directory::PythonDirectory, interface::IPythonLayer,
+    tests::visiting_file_tree_fixture::TestVisitingFileTree,
+};
 
 #[gtest]
 fn test_python_directory_containing_top_level_python_files_is_valid(
