@@ -1,22 +1,16 @@
-use vfs::VfsPath;
+use vfs::{VfsError, VfsPath};
 
 use crate::libs::tree::directory::PythonDirectory;
 
-use super::{errors::TreeError, file::PythonFile, interface::IPythonLayer};
+use super::{file::PythonFile, interface::IPythonLayer};
 
-pub fn layer_factory(path: &VfsPath) -> Result<Box<dyn IPythonLayer>, TreeError> {
-    if path.is_file().map_err(|_| TreeError::FileCreationError)? {
-        return Ok(Box::new(PythonFile {
-            filepath: path.as_str().to_string(),
-        }));
+pub fn layer_factory(path: &VfsPath) -> Result<Option<Box<dyn IPythonLayer>>, VfsError> {
+    if path.is_file()? && path.extension().is_some_and(|e| e == "py") {
+        tracing::info!("Building layer for path: {}", path.as_str());
+        return Ok(Some(Box::new(PythonFile::new(path.clone()))));
+    } else if path.is_dir()? {
+        tracing::info!("Building layer for path: {}", path.as_str());
+        return Ok(Some(Box::new(PythonDirectory::new(path)?)));
     }
-    if path.is_root()
-        || path
-            .is_dir()
-            .map_err(|_| TreeError::DirectoryCreationError)?
-    {
-        return Ok(Box::new(PythonDirectory {}));
-    }
-    // TODO Instead of panicking, return an error for unsupported paths
-    panic!()
+    Ok(None)
 }

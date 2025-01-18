@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use vfs::{PhysicalFS, VfsPath};
 
-use super::{errors::TreeError, factory::layer_factory, interface::IPythonLayer};
+use super::{directory::PythonDirectory, errors::TreeError, interface::IPythonLayer};
 pub fn walk(fs: Option<&VfsPath>) -> Result<(), TreeError> {
     let root: &VfsPath;
 
@@ -39,10 +39,15 @@ pub fn walk(fs: Option<&VfsPath>) -> Result<(), TreeError> {
 
     _python_file_paths.sort_by_key(|path| path.as_str().to_string());
 
-    let mut _python_layers: Vec<Box<dyn IPythonLayer>> = _python_file_paths
-        .iter()
-        .map(|path| layer_factory(&path))
-        .collect::<Result<Vec<_>, _>>()?;
+    // let mut _python_layers: Vec<Box<dyn IPythonLayer>> = _python_file_paths
+    //     .iter()
+    //     .map(|path| layer_factory(&path))
+    //     .collect::<Result<Vec<_>, _>>()?;
+
+    let _root_directory =
+        PythonDirectory::new(root).map_err(|_| TreeError::FileSystemCreationError)?;
+
+    _root_directory.run();
 
     Ok(())
 }

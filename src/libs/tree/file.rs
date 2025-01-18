@@ -1,11 +1,13 @@
+use vfs::VfsPath;
+
 use super::interface::{ApiVisitor, IPythonLayer};
 
 pub struct PythonFile {
-    pub filepath: String,
+    pub filepath: VfsPath,
 }
 
 impl PythonFile {
-    pub fn new(filepath: String) -> Self {
+    pub fn new(filepath: VfsPath) -> Self {
         PythonFile { filepath }
     }
 }
@@ -13,7 +15,11 @@ impl PythonFile {
 // Implement ITask for MyTask
 impl IPythonLayer for PythonFile {
     fn run(&self) {
-        todo!()
+        if let Ok(content) = self.filepath.read_to_string() {
+            println!("{}", content);
+        } else {
+            eprintln!("Failed to read the file: {:?}", self.filepath);
+        }
     }
 
     fn accept(&self, _visitor: &ApiVisitor) {
