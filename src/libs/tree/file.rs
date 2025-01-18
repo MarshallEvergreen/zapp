@@ -25,6 +25,10 @@ impl PythonFile {
 
 // Implement ITask for MyTask
 impl IPythonLayer for PythonFile {
+    fn name(&self) -> String {
+        self.filepath.as_str().to_string()
+    }
+
     fn run(&self) -> RunResult {
         let contents = self.filepath.read_to_string()?;
         let re = Regex::new(r"__all__\s*=\s*\[(.*?)\]").unwrap();
@@ -49,7 +53,7 @@ impl IPythonLayer for PythonFile {
             }
         }
 
-        tracing::info!("Public API: {:?}", public_api);
+        tracing::info!("Public API for {}: {:?}", self.name(), public_api);
 
         Ok(public_api)
     }

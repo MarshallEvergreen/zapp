@@ -1,3 +1,5 @@
+use std::collections::{HashMap, HashSet};
+
 use vfs::VfsPath;
 
 use super::{
@@ -10,6 +12,7 @@ use super::{
 pub struct PythonDirectory {
     init_file: PythonFile,
     layers: Vec<Box<dyn IPythonLayer>>,
+    pub name: String,
 }
 
 impl PythonDirectory {
@@ -28,17 +31,30 @@ impl PythonDirectory {
         Ok(PythonDirectory {
             init_file: PythonFile::new(root.join("__init__.py")?),
             layers: _layers,
+            name: root.as_str().to_string(),
         })
     }
 }
 
 // Implement ITask for MyTask
 impl IPythonLayer for PythonDirectory {
+    fn name(&self) -> String {
+        self.name.clone()
+    }
+
     fn run(&self) -> RunResult {
+        let mut submodule_apis: HashMap<String, HashSet<String>> = HashMap::new();
+
         for layer in &self.layers {
-            layer.run()?;
+            let api = layer.run()?;
+            submodule_apis.insert(layer.name(), api);
         }
-        Ok(Default::default())
+
+        let public_api: HashSet<String> = submodule_apis.values().cloned().flatten().collect();
+
+        tracing::info!("Public API for {}: {:?}", self.name(), public_api);
+
+        Ok(public_api)
     }
 
     fn is_valid(&self) -> bool {
