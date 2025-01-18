@@ -1,6 +1,7 @@
 use vfs::VfsPath;
 
 use super::{
+    errors::TreeError,
     factory::layer_factory,
     file::PythonFile,
     interface::{ApiVisitor, IPythonLayer},
@@ -12,7 +13,7 @@ pub struct PythonDirectory {
 }
 
 impl PythonDirectory {
-    pub fn new(root: &VfsPath) -> Result<Self, vfs::VfsError> {
+    pub fn new(root: &VfsPath) -> Result<Self, TreeError> {
         let _init_file = PythonFile::new(root.join("__init__.py")?);
 
         let mut paths: Vec<VfsPath> = root.read_dir()?.collect();
@@ -37,6 +38,15 @@ impl IPythonLayer for PythonDirectory {
         for layer in &self.layers {
             layer.run();
         }
+    }
+
+    fn is_valid(&self) -> bool {
+        for layer in &self.layers {
+            if layer.is_valid() {
+                return true;
+            }
+        }
+        return false;
     }
 
     fn accept(&self, _visitor: &ApiVisitor) {

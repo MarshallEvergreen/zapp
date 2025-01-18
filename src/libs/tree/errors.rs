@@ -1,21 +1,13 @@
-use std::fmt;
+use vfs::VfsError;
 
+#[derive(Debug)]
 pub enum TreeError {
+    VfsError(VfsError),
     FileSystemCreationError,
-    FileCreationError,
-    DirectoryCreationError,
-    WalkDirectoryError,
 }
 
-impl fmt::Debug for TreeError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            TreeError::FileCreationError => write!(f, "Invalid path type for layer creation"),
-            TreeError::DirectoryCreationError => {
-                write!(f, "Invalid path type for layer creation")
-            }
-            TreeError::WalkDirectoryError => write!(f, "Invalid path type for layer creation"),
-            TreeError::FileSystemCreationError => write!(f, "Failed to create file system"),
-        }
+impl From<VfsError> for TreeError {
+    fn from(err: VfsError) -> Self {
+        TreeError::VfsError(err)
     }
 }

@@ -1,9 +1,18 @@
 use vfs::VfsPath;
 
 use super::interface::{ApiVisitor, IPythonLayer};
+use std::fmt;
 
 pub struct PythonFile {
     pub filepath: VfsPath,
+}
+
+impl fmt::Debug for PythonFile {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("PythonFile")
+            .field("filepath", &self.filepath)
+            .finish()
+    }
 }
 
 impl PythonFile {
@@ -24,5 +33,9 @@ impl IPythonLayer for PythonFile {
 
     fn accept(&self, _visitor: &ApiVisitor) {
         todo!()
+    }
+
+    fn is_valid(&self) -> bool {
+        return true;
     }
 }

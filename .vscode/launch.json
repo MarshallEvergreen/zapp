@@ -13,6 +13,7 @@
                     "test",
                     "--no-run",
                     "--lib",
+                    // "--show-output",
                 ]
             },
             "args": []

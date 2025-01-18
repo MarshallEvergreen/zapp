@@ -1,10 +1,10 @@
-use vfs::{VfsError, VfsPath};
+use vfs::VfsPath;
 
 use crate::libs::tree::directory::PythonDirectory;
 
-use super::{file::PythonFile, interface::IPythonLayer};
+use super::{errors::TreeError, file::PythonFile, interface::IPythonLayer};
 
-pub fn layer_factory(path: &VfsPath) -> Result<Option<Box<dyn IPythonLayer>>, VfsError> {
+pub fn layer_factory(path: &VfsPath) -> Result<Option<Box<dyn IPythonLayer>>, TreeError> {
     if path.is_file()? && path.extension().is_some_and(|e| e == "py") {
         tracing::info!("Building layer for path: {}", path.as_str());
         return Ok(Some(Box::new(PythonFile::new(path.clone()))));

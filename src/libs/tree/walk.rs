@@ -3,6 +3,7 @@ use std::path::PathBuf;
 use vfs::{PhysicalFS, VfsPath};
 
 use super::{directory::PythonDirectory, errors::TreeError, interface::IPythonLayer};
+use std::collections::HashMap;
 pub fn walk(fs: Option<&VfsPath>) -> Result<(), TreeError> {
     let root: &VfsPath;
 
@@ -24,28 +25,20 @@ pub fn walk(fs: Option<&VfsPath>) -> Result<(), TreeError> {
         root = _default_fs.as_ref();
     }
 
-    let mut _python_file_paths: Vec<VfsPath> = root
-        .walk_dir()
-        .map_err(|_| TreeError::WalkDirectoryError)?
+    let mut _python_file_paths: HashMap<String, VfsPath> = root
+        .walk_dir()?
         .filter_map(|entry| {
             let entry: VfsPath = entry.ok()?;
-            if entry.is_file().ok()? && entry.extension()? == "py" {
-                Some(entry)
+            if entry.is_file().ok()? && entry.extension().is_some_and(|e| e == "py") {
+                let parent = entry.parent();
+                Some((parent.as_str().to_string(), parent))
             } else {
                 None
             }
         })
         .collect();
 
-    _python_file_paths.sort_by_key(|path| path.as_str().to_string());
-
-    // let mut _python_layers: Vec<Box<dyn IPythonLayer>> = _python_file_paths
-    //     .iter()
-    //     .map(|path| layer_factory(&path))
-    //     .collect::<Result<Vec<_>, _>>()?;
-
-    let _root_directory =
-        PythonDirectory::new(root).map_err(|_| TreeError::FileSystemCreationError)?;
+    let _root_directory: Box<dyn IPythonLayer> = Box::new(PythonDirectory::new(root)?);
 
     _root_directory.run();
 
