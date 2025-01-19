@@ -54,6 +54,45 @@ fn create_api_created_if_root_directory_is_valid(fixture: TestVisitingFileTree) 
 }
 
 #[gtest]
+fn create_api_for_multiple_files(fixture: TestVisitingFileTree) -> Result<()> {
+    // Arrange
+    let file_1 = "python_1.py";
+    let file_2 = "python_2.py";
+
+    let python_hello_world: &str = indoc! {r#"
+        __all__ = ["hello_world"]
+        
+        def hello_world():
+            print("Hello World!")
+    "#};
+
+    let python_anti_gravity: &str = indoc! {r#"
+    __all__ = ["antigravity"]
+    
+    def antigravity():
+        import antigravity
+    "#};
+
+    fixture.create_file("__init__.py")?;
+    fixture.write_to_file(file_1, python_hello_world)?;
+    fixture.write_to_file(file_2, python_anti_gravity)?;
+
+    // Act
+    walk(Some(&fixture.memfs))?;
+
+    // Assert
+
+    let expected_contents = indoc! {r#"
+        from .python_1 import (hello_world)
+        from .python_2 import (antigravity)
+    "#};
+
+    let actual_contents: String = fixture.read_file("__init__.py")?;
+
+    verify_that!(actual_contents, eq(expected_contents))
+}
+
+#[gtest]
 fn create_api_created_if_root_directory_is_valid_for_subdirectory(
     fixture: TestVisitingFileTree,
 ) -> Result<()> {

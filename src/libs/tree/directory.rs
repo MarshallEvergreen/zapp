@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::{BTreeMap, HashSet};
 
 use vfs::VfsPath;
 
@@ -19,7 +19,7 @@ pub struct PythonDirectory {
 
 impl PythonDirectory {
     pub fn new(root: &VfsPath) -> TreeResult<PythonDirectory> {
-        let paths: Vec<VfsPath> = root
+        let _paths: Vec<VfsPath> = root
             .read_dir()?
             .filter_map(|p| {
                 if p.filename().eq(INIT_PY) {
@@ -30,8 +30,7 @@ impl PythonDirectory {
             })
             .collect();
 
-        // TODO handle errors better here.
-        let _layers: Vec<Box<dyn IPythonLayer>> = paths
+        let _layers: Vec<Box<dyn IPythonLayer>> = _paths
             .iter()
             .filter_map(|path: &VfsPath| layer_factory(&path).ok()?)
             .collect();
@@ -51,7 +50,7 @@ impl IPythonLayer for PythonDirectory {
     }
 
     fn api(&self) -> RunResult {
-        let mut submodule_apis: HashMap<String, HashSet<String>> = HashMap::new();
+        let mut submodule_apis: BTreeMap<String, HashSet<String>> = BTreeMap::new();
 
         for layer in &self.layers {
             let api = layer.api()?;
