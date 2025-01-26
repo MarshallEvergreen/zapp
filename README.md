@@ -2,10 +2,7 @@
 <!-- Markdownify readme used as inspiration -->
 <h1 align="center">
   <br>
-  <a href="https://github.com/MarshallEvergreen/zapp"><img src="https://raw.githubusercontent.com/MarshallEvergreen/zapp/refs/heads/main/static/images/zapp.webp" alt="Zapp" width="200"></a>
-  <br>
-  Zapp
-  <br>
+  <a href="https://github.com/MarshallEvergreen/zapp"><img src="https://raw.githubusercontent.com/MarshallEvergreen/zapp/refs/heads/main/static/images/zapp.webp" alt="Zapp" width="400"></a>
 </h1>
 
 <h4 align="center">A fast python public API generator built in rust 🦀.</h4>
