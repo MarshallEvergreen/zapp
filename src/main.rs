@@ -1,4 +1,4 @@
-use zapp::libs::tree::walk::walk;
+use zapp::libs::tree::recurse::walk;
 
 fn main() {
     tracing_subscriber::fmt::init();

@@ -1,4 +1,4 @@
-use crate::libs::tree::{errors::TreeResult, walk::walk};
+use crate::libs::tree::{errors::TreeResult, recurse::walk};
 
 use super::visiting_file_tree_fixture::TestVisitingFileTree;
 use googletest::prelude::*;

@@ -1,5 +1,5 @@
 use crate::libs::tree::tests::visiting_file_tree_fixture::*;
-use crate::libs::tree::walk::walk;
+use crate::libs::tree::recurse::walk;
 use googletest::prelude::*;
 
 #[gtest]
