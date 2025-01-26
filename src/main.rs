@@ -1,4 +1,4 @@
-use super_duper_octo_lamp::libs::tree::walk::walk;
+use zapp::libs::tree::walk::walk;
 
 fn main() {
     tracing_subscriber::fmt::init();
