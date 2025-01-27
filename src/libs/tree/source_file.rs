@@ -60,8 +60,4 @@ impl IPythonLayer for PythonSourceFile {
     fn accept(&self, _visitor: &ApiVisitor) {
         todo!()
     }
-
-    fn is_valid(&self) -> bool {
-        return true;
-    }
 }

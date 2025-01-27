@@ -66,15 +66,6 @@ impl IPythonLayer for PythonDirectory {
         Ok(public_api)
     }
 
-    fn is_valid(&self) -> bool {
-        for layer in &self.layers {
-            if layer.is_valid() {
-                return true;
-            }
-        }
-        return false;
-    }
-
     fn accept(&self, _visitor: &ApiVisitor) {
         todo!()
     }
