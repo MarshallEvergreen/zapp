@@ -5,7 +5,7 @@ use vfs::{PhysicalFS, VfsPath};
 use super::{
     errors::{TreeError, TreeResult},
     factory::layer_factory,
-    interface::IPythonLayer,
+    interface::IPythonEntity,
 };
 
 pub fn walk(fs: Option<&VfsPath>) -> TreeResult<()> {
@@ -29,7 +29,7 @@ pub fn walk(fs: Option<&VfsPath>) -> TreeResult<()> {
         root = _default_fs.as_ref();
     }
 
-    let _root_directory: Box<dyn IPythonLayer> = layer_factory(root)?.ok_or_else(|| {
+    let _root_directory: Box<dyn IPythonEntity> = layer_factory(root)?.ok_or_else(|| {
         TreeError::RootDirectoryCreationError(format!("Failed to create root directory layer",))
     })?;
 

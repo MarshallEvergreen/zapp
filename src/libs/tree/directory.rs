@@ -6,14 +6,14 @@ use super::{
     api_file::PythonApiFile,
     errors::TreeResult,
     factory::layer_factory,
-    interface::{ApiVisitor, IPythonLayer, RunResult},
+    interface::{IPythonEntity, IPythonEntityVisitor, RunResult},
 };
 
 const INIT_PY: &str = "__init__.py";
 
 pub struct PythonDirectory {
     init_file: PythonApiFile,
-    layers: Vec<Box<dyn IPythonLayer>>,
+    layers: Vec<Box<dyn IPythonEntity>>,
     name: String,
 }
 
@@ -30,7 +30,7 @@ impl PythonDirectory {
             })
             .collect();
 
-        let _layers: Vec<Box<dyn IPythonLayer>> = _paths
+        let _layers: Vec<Box<dyn IPythonEntity>> = _paths
             .iter()
             .filter_map(|path: &VfsPath| layer_factory(&path).ok()?)
             .collect();
@@ -44,7 +44,7 @@ impl PythonDirectory {
 }
 
 // Implement ITask for MyTask
-impl IPythonLayer for PythonDirectory {
+impl IPythonEntity for PythonDirectory {
     fn name(&self) -> String {
         self.name.clone()
     }
@@ -66,7 +66,7 @@ impl IPythonLayer for PythonDirectory {
         Ok(public_api)
     }
 
-    fn accept(&self, _visitor: &ApiVisitor) {
-        todo!()
+    fn accept(&self, visitor: &mut dyn IPythonEntityVisitor) {
+        visitor.visit_python_directory(self);
     }
 }

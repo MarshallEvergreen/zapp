@@ -4,6 +4,7 @@
         "googletest",
         "gtest",
         "indoc",
-        "teardown"
+        "teardown",
+        "visitable"
     ]
 }
