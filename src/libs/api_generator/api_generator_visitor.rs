@@ -1,9 +1,8 @@
 use std::collections::{BTreeMap, HashSet};
 
-use crate::libs::python_file_system::errors::TreeError;
-
-use super::{
+use crate::libs::python_file_system::{
     directory::PythonDirectory,
+    errors::TreeError,
     interface::{IPythonEntity, IPythonEntityVisitor, VisitResult},
     source_file::PythonSourceFile,
 };

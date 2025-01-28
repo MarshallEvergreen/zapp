@@ -2,12 +2,12 @@ use std::path::PathBuf;
 
 use vfs::{PhysicalFS, VfsPath};
 
-use super::{
-    api_generator_visitor::ApiVisitorGenerator,
-    errors::{TreeError, TreeResult},
-    factory::layer_factory,
-    interface::IPythonEntity,
+use crate::libs::{
+    api_generator::api_generator_visitor::ApiVisitorGenerator,
+    python_file_system::errors::TreeError,
 };
+
+use super::{errors::TreeResult, factory::layer_factory, interface::IPythonEntity};
 
 pub fn walk(fs: Option<&VfsPath>) -> TreeResult<()> {
     let root: &VfsPath;

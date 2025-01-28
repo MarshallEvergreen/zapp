@@ -1,5 +1,4 @@
 pub mod api_file;
-pub mod api_generator_visitor;
 pub mod directory;
 pub mod errors;
 pub mod factory;
