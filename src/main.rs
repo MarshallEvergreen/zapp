@@ -1,4 +1,4 @@
-use zapp::libs::tree::recurse::walk;
+use zapp::libs::python_file_system::recurse::walk;
 
 fn main() {
     tracing_subscriber::fmt::init();

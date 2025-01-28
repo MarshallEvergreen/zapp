@@ -1,6 +1,6 @@
 use std::collections::{BTreeMap, HashSet};
 
-use crate::libs::tree::errors::TreeError;
+use crate::libs::python_file_system::errors::TreeError;
 
 use super::{
     directory::PythonDirectory,

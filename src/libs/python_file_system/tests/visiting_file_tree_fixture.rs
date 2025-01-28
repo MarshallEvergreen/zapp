@@ -1,7 +1,7 @@
 use googletest::prelude::*;
 use vfs::{MemoryFS, SeekAndWrite, VfsPath, VfsResult};
 
-use crate::libs::tree::directory::PythonDirectory;
+use crate::libs::python_file_system::directory::PythonDirectory;
 
 pub struct TestVisitingFileTree {
     pub memfs: VfsPath,
