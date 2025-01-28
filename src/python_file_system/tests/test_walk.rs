@@ -1,4 +1,4 @@
-use crate::libs::python_file_system::{errors::TreeResult, recurse::walk};
+use crate::python_file_system::{errors::TreeResult, recurse::walk};
 
 use super::visiting_file_tree_fixture::TestVisitingFileTree;
 use googletest::prelude::*;

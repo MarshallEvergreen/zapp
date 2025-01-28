@@ -1,5 +1,5 @@
-use crate::libs::python_file_system::recurse::walk;
-use crate::libs::python_file_system::tests::visiting_file_tree_fixture::*;
+use crate::python_file_system::recurse::walk;
+use crate::python_file_system::tests::visiting_file_tree_fixture::*;
 use googletest::prelude::*;
 
 #[gtest]

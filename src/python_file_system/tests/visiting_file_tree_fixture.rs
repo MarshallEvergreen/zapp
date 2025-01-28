@@ -1,8 +1,6 @@
 use googletest::prelude::*;
 use vfs::{MemoryFS, SeekAndWrite, VfsPath, VfsResult};
 
-use crate::libs::python_file_system::directory::PythonDirectory;
-
 pub struct TestVisitingFileTree {
     pub memfs: VfsPath,
 }
@@ -25,10 +23,6 @@ impl TestVisitingFileTree {
     pub fn read_file(&self, name: &str) -> VfsResult<String> {
         let contents = self.memfs.join(name)?.read_to_string()?;
         return Ok(contents);
-    }
-
-    pub fn root_dir(&self) -> PythonDirectory {
-        return PythonDirectory::new(&self.memfs).unwrap();
     }
 }
 

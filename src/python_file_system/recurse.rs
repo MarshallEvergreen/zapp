@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use vfs::{PhysicalFS, VfsPath};
 
-use crate::libs::{
+use crate::{
     api_generator::api_generator_visitor::ApiVisitorGenerator,
     python_file_system::errors::TreeError,
 };
