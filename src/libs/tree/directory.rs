@@ -6,15 +6,17 @@ use super::{
     api_file::PythonApiFile,
     errors::TreeResult,
     factory::layer_factory,
-    interface::{IPythonEntity, IPythonEntityVisitor, RunResult},
+    interface::{IPythonEntity, IPythonEntityVisitor, RunResult, VisitResult},
 };
 
 const INIT_PY: &str = "__init__.py";
 
 pub struct PythonDirectory {
-    init_file: PythonApiFile,
-    layers: Vec<Box<dyn IPythonEntity>>,
+    pub layers: Vec<Box<dyn IPythonEntity>>,
+    pub init_file: PythonApiFile,
+
     name: String,
+    filepath: VfsPath,
 }
 
 impl PythonDirectory {
@@ -39,6 +41,7 @@ impl PythonDirectory {
             init_file: PythonApiFile::new(root.join(INIT_PY)?),
             layers: _layers,
             name: root.filename().to_string(),
+            filepath: root.clone(),
         })
     }
 }
@@ -47,6 +50,10 @@ impl PythonDirectory {
 impl IPythonEntity for PythonDirectory {
     fn name(&self) -> String {
         self.name.clone()
+    }
+
+    fn parent(&self) -> VfsPath {
+        self.filepath.parent()
     }
 
     fn api(&self) -> RunResult {
@@ -66,7 +73,10 @@ impl IPythonEntity for PythonDirectory {
         Ok(public_api)
     }
 
-    fn accept(&self, visitor: &mut dyn IPythonEntityVisitor) {
-        visitor.visit_python_directory(self);
+    fn accept(&self, visitor: &mut dyn IPythonEntityVisitor) -> VisitResult {
+        for layer in &self.layers {
+            layer.accept(visitor)?;
+        }
+        visitor.visit_python_directory(&self)
     }
 }

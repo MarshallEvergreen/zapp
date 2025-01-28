@@ -3,6 +3,7 @@ use std::path::PathBuf;
 use vfs::{PhysicalFS, VfsPath};
 
 use super::{
+    api_generator_visitor::ApiVisitorGenerator,
     errors::{TreeError, TreeResult},
     factory::layer_factory,
     interface::IPythonEntity,
@@ -33,7 +34,10 @@ pub fn walk(fs: Option<&VfsPath>) -> TreeResult<()> {
         TreeError::RootDirectoryCreationError(format!("Failed to create root directory layer",))
     })?;
 
-    _root_directory.api()?;
+    // _root_directory.api()?;
+
+    let mut visitor = ApiVisitorGenerator::new();
+    _root_directory.accept(&mut visitor)?;
 
     Ok(())
 }

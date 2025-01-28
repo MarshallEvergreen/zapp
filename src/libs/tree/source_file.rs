@@ -1,6 +1,6 @@
 use vfs::VfsPath;
 
-use super::interface::{IPythonEntity, IPythonEntityVisitor, RunResult};
+use super::interface::{IPythonEntity, IPythonEntityVisitor, RunResult, VisitResult};
 use regex::Regex;
 use std::collections::HashSet;
 
@@ -14,7 +14,6 @@ impl PythonSourceFile {
     }
 }
 
-// Implement ITask for MyTask
 impl IPythonEntity for PythonSourceFile {
     fn name(&self) -> String {
         // Whether or not to do relative imports can be controlled here.
@@ -26,6 +25,10 @@ impl IPythonEntity for PythonSourceFile {
             .next()
             .unwrap()
             .to_string();
+    }
+
+    fn parent(&self) -> VfsPath {
+        self.filepath.parent()
     }
 
     fn api(&self) -> RunResult {
@@ -57,7 +60,7 @@ impl IPythonEntity for PythonSourceFile {
         Ok(public_api)
     }
 
-    fn accept(&self, visitor: &mut dyn IPythonEntityVisitor) {
-        visitor.visit_python_source_file(self);
+    fn accept(&self, visitor: &mut dyn IPythonEntityVisitor) -> VisitResult {
+        visitor.visit_python_source_file(self)
     }
 }
