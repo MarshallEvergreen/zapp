@@ -2,7 +2,7 @@ use std::collections::{BTreeMap, HashSet};
 
 use vfs::VfsPath;
 
-use super::errors::TreeError;
+use super::errors::PythonFileSystemError;
 
 pub struct PythonApiFile {
     pub filepath: VfsPath,
@@ -13,7 +13,10 @@ impl PythonApiFile {
         PythonApiFile { filepath }
     }
 
-    pub fn write(&self, api: &BTreeMap<String, HashSet<String>>) -> Result<(), TreeError> {
+    pub fn write(
+        &self,
+        api: &BTreeMap<String, HashSet<String>>,
+    ) -> Result<(), PythonFileSystemError> {
         let mut content = String::new();
 
         for (key, values) in api {
@@ -33,7 +36,7 @@ impl PythonApiFile {
         self.filepath
             .create_file()?
             .write_all(content.as_bytes())
-            .map_err(|_| TreeError::FileSystemCreationError)?;
+            .map_err(|_| PythonFileSystemError::FileSystemCreationError)?;
 
         Ok(())
     }

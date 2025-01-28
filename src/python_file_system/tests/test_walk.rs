@@ -1,4 +1,4 @@
-use crate::python_file_system::{errors::TreeResult, recurse::walk};
+use crate::python_file_system::{errors::PythonFileSystemResult, recurse::walk};
 
 use super::visiting_file_tree_fixture::TestVisitingFileTree;
 use googletest::prelude::*;
@@ -17,7 +17,7 @@ fn error_if_top_level_directory_missing_init_file(fixture: TestVisitingFileTree)
     fixture.write_to_file(file_1, python_hello_world)?;
 
     // Act
-    let result: TreeResult<()> = walk(Some(&fixture.memfs));
+    let result: PythonFileSystemResult<()> = walk(Some(&fixture.memfs));
 
     // Assert
     // TODO Partial equal needs defining the check errors match

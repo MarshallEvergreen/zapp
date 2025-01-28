@@ -2,7 +2,7 @@ use std::collections::{BTreeMap, HashSet};
 
 use crate::python_file_system::{
     directory::PythonDirectory,
-    errors::TreeError,
+    errors::PythonFileSystemError,
     interface::{IPythonEntity, IPythonEntityVisitor, VisitResult},
     source_file::PythonSourceFile,
 };
@@ -35,7 +35,7 @@ impl IPythonEntityVisitor for ApiVisitorGenerator {
             .ok_or_else(|| {
                 tracing::error!("Failed to find key {}", visitable.name());
                 // TODO better error here
-                TreeError::RootDirectoryCreationError(format!(
+                PythonFileSystemError::RootDirectoryCreationError(format!(
                     "Failed to find key {}",
                     visitable.name()
                 ))

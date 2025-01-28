@@ -4,12 +4,12 @@ use vfs::{PhysicalFS, VfsPath};
 
 use crate::{
     api_generator::api_generator_visitor::ApiVisitorGenerator,
-    python_file_system::errors::TreeError,
+    python_file_system::errors::PythonFileSystemError,
 };
 
-use super::{errors::TreeResult, factory::layer_factory, interface::IPythonEntity};
+use super::{errors::PythonFileSystemResult, factory::layer_factory, interface::IPythonEntity};
 
-pub fn walk(fs: Option<&VfsPath>) -> TreeResult<()> {
+pub fn walk(fs: Option<&VfsPath>) -> PythonFileSystemResult<()> {
     let root: &VfsPath;
 
     // null pointer - only created if no file system is provided
@@ -21,7 +21,7 @@ pub fn walk(fs: Option<&VfsPath>) -> TreeResult<()> {
     } else {
         tracing::warn!("No file system provided, using default.");
         let cwd: PathBuf =
-            std::env::current_dir().map_err(|_| TreeError::FileSystemCreationError)?;
+            std::env::current_dir().map_err(|_| PythonFileSystemError::FileSystemCreationError)?;
         tracing::info!(
             "Using current working directory as root: '{}'",
             cwd.display()
@@ -31,7 +31,9 @@ pub fn walk(fs: Option<&VfsPath>) -> TreeResult<()> {
     }
 
     let _root_directory: Box<dyn IPythonEntity> = layer_factory(root)?.ok_or_else(|| {
-        TreeError::RootDirectoryCreationError(format!("Failed to create root directory layer",))
+        PythonFileSystemError::RootDirectoryCreationError(format!(
+            "Failed to create root directory layer",
+        ))
     })?;
 
     // _root_directory.api()?;

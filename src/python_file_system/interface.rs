@@ -2,10 +2,12 @@ use std::collections::HashSet;
 
 use vfs::VfsPath;
 
-use super::{directory::PythonDirectory, errors::TreeError, source_file::PythonSourceFile};
+use super::{
+    directory::PythonDirectory, errors::PythonFileSystemError, source_file::PythonSourceFile,
+};
 
-pub type RunResult = Result<HashSet<String>, TreeError>;
-pub type VisitResult = Result<(), TreeError>;
+pub type RunResult = Result<HashSet<String>, PythonFileSystemError>;
+pub type VisitResult = Result<(), PythonFileSystemError>;
 
 pub trait IPythonEntity {
     fn name(&self) -> String;
