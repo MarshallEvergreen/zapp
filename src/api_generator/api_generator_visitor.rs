@@ -7,13 +7,13 @@ use crate::python_file_system::{
     source_file::PythonSourceFile,
 };
 
-pub struct ApiVisitorGenerator {
+pub struct ApiGeneratorVisitor {
     submodule_apis: BTreeMap<String, BTreeMap<String, HashSet<String>>>,
 }
 
-impl ApiVisitorGenerator {
+impl ApiGeneratorVisitor {
     pub fn new() -> Self {
-        ApiVisitorGenerator {
+        ApiGeneratorVisitor {
             submodule_apis: BTreeMap::new(),
         }
     }
@@ -27,7 +27,7 @@ impl ApiVisitorGenerator {
     }
 }
 
-impl IPythonEntityVisitor for ApiVisitorGenerator {
+impl IPythonEntityVisitor for ApiGeneratorVisitor {
     fn visit_python_directory(&mut self, visitable: &PythonDirectory) -> VisitResult {
         let submodule_apis = self
             .submodule_apis

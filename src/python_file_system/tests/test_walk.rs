@@ -1,4 +1,7 @@
-use crate::python_file_system::{errors::PythonFileSystemResult, recurse::walk};
+use crate::{
+    python_file_system::{errors::PythonFileSystemResult, recurse::walk},
+    ApiGeneratorVisitor,
+};
 
 use super::visiting_file_tree_fixture::TestVisitingFileTree;
 use googletest::prelude::*;
@@ -17,7 +20,10 @@ fn error_if_top_level_directory_missing_init_file(fixture: TestVisitingFileTree)
     fixture.write_to_file(file_1, python_hello_world)?;
 
     // Act
-    let result: PythonFileSystemResult<()> = walk(Some(&fixture.memfs));
+    let result: PythonFileSystemResult<()> = walk(
+        vec![Box::new(ApiGeneratorVisitor::new())],
+        Some(&fixture.memfs),
+    );
 
     // Assert
     // TODO Partial equal needs defining the check errors match
@@ -40,8 +46,10 @@ fn create_api_created_if_root_directory_is_valid(fixture: TestVisitingFileTree) 
     fixture.write_to_file(file_1, python_hello_world)?;
 
     // Act
-    walk(Some(&fixture.memfs))?;
-
+    walk(
+        vec![Box::new(ApiGeneratorVisitor::new())],
+        Some(&fixture.memfs),
+    )?;
     // Assert
 
     let expected_contents = indoc! {r#"
@@ -78,8 +86,10 @@ fn create_api_for_multiple_files(fixture: TestVisitingFileTree) -> Result<()> {
     fixture.write_to_file(file_2, python_anti_gravity)?;
 
     // Act
-    walk(Some(&fixture.memfs))?;
-
+    walk(
+        vec![Box::new(ApiGeneratorVisitor::new())],
+        Some(&fixture.memfs),
+    )?;
     // Assert
 
     let expected_contents = indoc! {r#"
@@ -112,7 +122,10 @@ fn create_api_created_if_root_directory_is_valid_for_subdirectory(
     fixture.write_to_file(file_1, python_hello_world)?;
 
     // Act
-    walk(Some(&fixture.memfs))?;
+    walk(
+        vec![Box::new(ApiGeneratorVisitor::new())],
+        Some(&fixture.memfs),
+    )?;
 
     // Assert
 

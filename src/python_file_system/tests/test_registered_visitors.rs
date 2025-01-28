@@ -1,4 +1,3 @@
-use crate::python_file_system::recurse::walk;
 use crate::python_file_system::tests::visiting_file_tree_fixture::*;
 use googletest::prelude::*;
 
@@ -11,8 +10,6 @@ fn test_files_can_be_created(fixture: TestVisitingFileTree) -> googletest::Resul
     fixture.create_file(file_1)?;
     fixture.create_file(file_2)?;
 
-    // Act
-    let _ = walk(Some(&fixture.memfs));
     // Assert
     let file_1_exists = fixture.memfs.join(file_1)?.exists()?;
     let file_2_exists = fixture.memfs.join(file_2)?.exists()?;

@@ -2,14 +2,18 @@ use std::path::PathBuf;
 
 use vfs::{PhysicalFS, VfsPath};
 
-use crate::{
-    api_generator::api_generator_visitor::ApiVisitorGenerator,
-    python_file_system::errors::PythonFileSystemError,
+use crate::python_file_system::errors::PythonFileSystemError;
+
+use super::{
+    errors::PythonFileSystemResult,
+    factory::layer_factory,
+    interface::{IPythonEntity, IPythonEntityVisitor},
 };
 
-use super::{errors::PythonFileSystemResult, factory::layer_factory, interface::IPythonEntity};
-
-pub fn walk(fs: Option<&VfsPath>) -> PythonFileSystemResult<()> {
+pub fn walk(
+    mut visitors: Vec<Box<dyn IPythonEntityVisitor>>,
+    fs: Option<&VfsPath>,
+) -> PythonFileSystemResult<()> {
     let root: &VfsPath;
 
     // null pointer - only created if no file system is provided
@@ -36,10 +40,11 @@ pub fn walk(fs: Option<&VfsPath>) -> PythonFileSystemResult<()> {
         ))
     })?;
 
-    // _root_directory.api()?;
-
-    let mut visitor = ApiVisitorGenerator::new();
-    _root_directory.accept(&mut visitor)?;
+    visitors.iter_mut().for_each(|visitor| {
+        let v = visitor.as_mut();
+        // TODO handle errors
+        _root_directory.accept(v).unwrap_or_default();
+    });
 
     Ok(())
 }

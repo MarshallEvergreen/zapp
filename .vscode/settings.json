@@ -5,6 +5,7 @@
         "gtest",
         "indoc",
         "teardown",
-        "visitable"
+        "visitable",
+        "zapp"
     ]
 }
