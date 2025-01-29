@@ -1,9 +1,9 @@
 use crate::{
     python_file_system::{errors::PythonFileSystemResult, recurse::walk},
+    test_helpers::fixtures::TestVisitingFileTree,
     ApiGeneratorVisitor,
 };
 
-use super::visiting_file_tree_fixture::TestVisitingFileTree;
 use googletest::prelude::*;
 use indoc::indoc;
 

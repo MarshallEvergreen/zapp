@@ -1,5 +1,6 @@
-use crate::python_file_system::tests::visiting_file_tree_fixture::*;
 use googletest::prelude::*;
+
+use crate::test_helpers::fixtures::TestVisitingFileTree;
 
 #[gtest]
 fn test_files_can_be_created(fixture: TestVisitingFileTree) -> googletest::Result<()> {

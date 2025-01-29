@@ -6,6 +6,7 @@ pub use api_generator::api_generator_visitor::ApiGeneratorVisitor;
 pub mod python_file_system;
 
 #[cfg(test)]
+pub mod test_helpers;
 mod tests; // Include the test module conditionally for tests
 
 pub fn zapp() {
