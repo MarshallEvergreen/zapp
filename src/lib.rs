@@ -11,6 +11,7 @@ mod tests; // Include the test module conditionally for tests
 pub fn zapp() {
     tracing_subscriber::fmt::init();
 
+    // TODO Add rust formatting visitor based on passed command args
     let visitors: Vec<Box<dyn IPythonEntityVisitor>> = vec![Box::new(ApiGeneratorVisitor::new())];
 
     match walk(visitors, None) {
