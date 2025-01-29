@@ -1,11 +1,11 @@
+use googletest::prelude::*;
+use indoc::indoc;
+
 use crate::{
     python_file_system::{errors::PythonFileSystemResult, recurse::walk},
     test_helpers::fixtures::TestVisitingFileTree,
     ApiGeneratorVisitor,
 };
-
-use googletest::prelude::*;
-use indoc::indoc;
 
 #[gtest]
 fn error_if_top_level_directory_missing_init_file(fixture: TestVisitingFileTree) -> Result<()> {
