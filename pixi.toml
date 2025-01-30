@@ -1,0 +1,12 @@
+[project]
+authors = ["Abie Marshall <abiemarshall94@gmail.com>"]
+channels = ["conda-forge"]
+description = "Add a short description here"
+name = "zapp"
+platforms = ["osx-arm64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+ruff = ">=0.9.3,<0.10"

@@ -2,10 +2,10 @@ use std::path::PathBuf;
 
 use vfs::{PhysicalFS, VfsPath};
 
-use crate::python_file_system::errors::PythonFileSystemError;
+use crate::python_file_system::errors::PythonFileSystemErrorKind;
 
 use super::{
-    errors::PythonFileSystemResult,
+    errors::{PythonFileSystemError, PythonFileSystemResult},
     factory::layer_factory,
     interface::{IPythonEntity, IPythonEntityVisitor},
 };
@@ -24,8 +24,8 @@ pub fn walk(
         root = provided_fs;
     } else {
         tracing::warn!("No file system provided, using default.");
-        let cwd: PathBuf =
-            std::env::current_dir().map_err(|_| PythonFileSystemError::FileSystemCreationError)?;
+        let cwd: PathBuf = std::env::current_dir()
+            .map_err(|_| PythonFileSystemErrorKind::FileSystemCreationError)?;
         tracing::info!(
             "Using current working directory as root: '{}'",
             cwd.display()
@@ -34,10 +34,11 @@ pub fn walk(
         root = _default_fs.as_ref();
     }
 
-    let _root_directory: Box<dyn IPythonEntity> = layer_factory(root)?.ok_or_else(|| {
-        PythonFileSystemError::RootDirectoryCreationError(format!(
-            "Failed to create root directory layer",
-        ))
+    let _root_directory: Box<dyn IPythonEntity> = layer_factory(root)?.ok_or({
+        PythonFileSystemError::new(
+            PythonFileSystemErrorKind::RootDirectoryCreationError,
+            "Failed to created root directory".into(),
+        )
     })?;
 
     visitors.iter_mut().for_each(|visitor| {

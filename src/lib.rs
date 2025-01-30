@@ -1,19 +1,41 @@
+use api_generator::api_generator_visitor::ApiGeneratorVisitor;
 use python_file_system::{interface::IPythonEntityVisitor, recurse::walk};
 
 pub mod api_generator;
-pub use api_generator::api_generator_visitor::ApiGeneratorVisitor;
+pub mod ruff_formatter;
 
 pub mod python_file_system;
-
+use ruff_formatter::visitor::RuffFormatVisitor;
+use which::which;
 #[cfg(test)]
 pub mod test_helpers;
 mod tests; // Include the test module conditionally for tests
 
-pub fn zapp() {
+pub struct Config {
+    pub rust_format: bool,
+}
+
+const RUFF: &str = "ruff"; // Change this to the program you want to check
+
+pub fn zapp(config: Config) {
     tracing_subscriber::fmt::init();
 
-    // TODO Add rust formatting visitor based on passed command args
-    let visitors: Vec<Box<dyn IPythonEntityVisitor>> = vec![Box::new(ApiGeneratorVisitor::new())];
+    let mut visitors: Vec<Box<dyn IPythonEntityVisitor>> = Vec::new();
+
+    visitors.push(Box::new(ApiGeneratorVisitor::new()));
+
+    if config.rust_format {
+        match which(RUFF) {
+            Ok(path) => {
+                tracing::info!("{} is available at: {}", RUFF, path.display());
+                visitors.push(Box::new(RuffFormatVisitor {}));
+            }
+            Err(_) => {
+                tracing::error!("'{}' is not found in $PATH", RUFF);
+                std::process::exit(1);
+            }
+        }
+    }
 
     match walk(visitors, None) {
         Ok(_) => {

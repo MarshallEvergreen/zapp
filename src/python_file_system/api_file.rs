@@ -1,6 +1,6 @@
 use std::collections::{BTreeMap, HashSet};
 
-use vfs::VfsPath;
+use vfs::{VfsError, VfsPath};
 
 use super::errors::PythonFileSystemError;
 
@@ -33,10 +33,12 @@ impl PythonApiFile {
             ));
         }
 
-        self.filepath
-            .create_file()?
-            .write_all(content.as_bytes())
-            .map_err(|_| PythonFileSystemError::FileSystemCreationError)?;
+        let write_to_file = || -> Result<(), VfsError> {
+            self.filepath.create_file()?.write_all(content.as_bytes())?;
+            Ok(())
+        };
+
+        write_to_file()?;
 
         Ok(())
     }

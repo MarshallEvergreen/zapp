@@ -44,6 +44,10 @@ impl PythonDirectory {
             filepath: root.clone(),
         })
     }
+
+    pub fn filepath(&self) -> &VfsPath {
+        &self.filepath
+    }
 }
 
 // Implement ITask for MyTask

@@ -1,5 +1,6 @@
-use zapp::zapp;
+use zapp::{zapp, Config};
 
 fn main() {
-    zapp();
+    let config = Config { rust_format: true };
+    zapp(config);
 }
