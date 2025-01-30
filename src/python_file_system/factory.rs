@@ -17,7 +17,7 @@ pub fn layer_factory(path: &VfsPath) -> PfsResult<OptionalEntity> {
     };
 }
 
-fn create_python_directory(path: &VfsPath) -> PfsResult<PythonDirectory> {
+pub(crate) fn create_python_directory(path: &VfsPath) -> PfsResult<PythonDirectory> {
     if !path.is_dir()? {
         return Err(PfsError::new(
             PfsErrorKind::DirectoryCreationError,

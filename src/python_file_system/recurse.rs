@@ -6,8 +6,9 @@ use vfs::{PhysicalFS, VfsPath};
 use crate::python_file_system::errors::PfsErrorKind;
 
 use super::{
-    errors::{PfsError, PfsResult},
-    factory::layer_factory,
+    directory::PythonDirectory,
+    errors::PfsResult,
+    factory::create_python_directory,
     interface::{IPythonEntity, IPythonEntityVisitor},
 };
 
@@ -36,12 +37,7 @@ pub fn walk(
         root = _default_fs.as_ref();
     }
 
-    let _root_directory: Box<dyn IPythonEntity> = layer_factory(root)?.ok_or({
-        PfsError::new(
-            PfsErrorKind::DirectoryCreationError,
-            "Failed to created root directory".into(),
-        )
-    })?;
+    let _root_directory: PythonDirectory = create_python_directory(root)?;
 
     visitors.iter_mut().for_each(|visitor| {
         _root_directory.accept(visitor.as_mut()).unwrap_or_default();
