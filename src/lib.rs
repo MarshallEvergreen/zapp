@@ -6,7 +6,7 @@ pub mod ruff_formatter;
 
 pub mod python_file_system;
 use ruff_formatter::visitor::RuffFormatVisitor;
-use tracing::{error, info, Level};
+use tracing::{error, info, trace, Level};
 use tracing_subscriber::util::SubscriberInitExt;
 use which::which;
 #[cfg(test)]
@@ -22,7 +22,7 @@ const RUFF: &str = "ruff"; // Change this to the program you want to check
 pub fn zapp(config: Config) {
     tracing_subscriber::fmt()
         // filter spans/events with level TRACE or higher.
-        .with_max_level(Level::INFO)
+        .with_max_level(Level::TRACE)
         // build but do not install the subscriber.
         .finish()
         .init();
@@ -32,9 +32,10 @@ pub fn zapp(config: Config) {
     visitors.push(Box::new(ApiGeneratorVisitor::new()));
 
     if config.rust_format {
+        trace!("Checking for the presence of '{}'", RUFF);
         match which(RUFF) {
             Ok(path) => {
-                info!("{} is available at: {}", RUFF, path.display());
+                trace!("{} is available at: {}", RUFF, path.display());
                 visitors.push(Box::new(RuffFormatVisitor {}));
             }
             Err(_) => {

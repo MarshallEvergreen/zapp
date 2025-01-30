@@ -1,5 +1,6 @@
 use std::path::PathBuf;
 
+use tracing::trace;
 use vfs::{PhysicalFS, VfsPath};
 
 use crate::python_file_system::errors::PythonFileSystemErrorKind;
@@ -20,7 +21,7 @@ pub fn walk(
     let _default_fs: Box<VfsPath>;
 
     if let Some(provided_fs) = fs {
-        tracing::info!("File system provided.");
+        trace!("File system provided.");
         root = provided_fs;
     } else {
         tracing::warn!("No file system provided, using default.");
