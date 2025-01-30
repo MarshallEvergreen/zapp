@@ -9,7 +9,7 @@ use super::{
 
 type OptionalEntity = Option<Box<dyn IPythonEntity>>;
 
-pub fn layer_factory(path: &VfsPath) -> PfsResult<OptionalEntity> {
+pub(crate) fn entity_factory(path: &VfsPath) -> PfsResult<OptionalEntity> {
     if path.is_file()? && path.extension().is_some_and(|e| e == "py") {
         return Ok(Some(Box::new(PythonSourceFile::new(path.clone()))));
     } else {

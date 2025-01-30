@@ -5,7 +5,7 @@ use vfs::VfsPath;
 use super::{
     api_file::PythonApiFile,
     errors::PfsResult,
-    factory::layer_factory,
+    factory::entity_factory,
     interface::{IPythonEntity, IPythonEntityVisitor, RunResult, VisitResult},
 };
 
@@ -34,7 +34,7 @@ impl PythonDirectory {
 
         let _layers: Vec<Box<dyn IPythonEntity>> = _paths
             .iter()
-            .filter_map(|path: &VfsPath| layer_factory(&path).ok()?)
+            .filter_map(|path: &VfsPath| entity_factory(&path).ok()?)
             .collect();
 
         Ok(PythonDirectory {
