@@ -6,6 +6,8 @@ pub mod ruff_formatter;
 
 pub mod python_file_system;
 use ruff_formatter::visitor::RuffFormatVisitor;
+use tracing::{error, info, Level};
+use tracing_subscriber::util::SubscriberInitExt;
 use which::which;
 #[cfg(test)]
 pub mod test_helpers;
@@ -18,7 +20,12 @@ pub struct Config {
 const RUFF: &str = "ruff"; // Change this to the program you want to check
 
 pub fn zapp(config: Config) {
-    tracing_subscriber::fmt::init();
+    tracing_subscriber::fmt()
+        // filter spans/events with level TRACE or higher.
+        .with_max_level(Level::INFO)
+        // build but do not install the subscriber.
+        .finish()
+        .init();
 
     let mut visitors: Vec<Box<dyn IPythonEntityVisitor>> = Vec::new();
 
@@ -27,11 +34,11 @@ pub fn zapp(config: Config) {
     if config.rust_format {
         match which(RUFF) {
             Ok(path) => {
-                tracing::info!("{} is available at: {}", RUFF, path.display());
+                info!("{} is available at: {}", RUFF, path.display());
                 visitors.push(Box::new(RuffFormatVisitor {}));
             }
             Err(_) => {
-                tracing::error!("'{}' is not found in $PATH", RUFF);
+                error!("'{}' is not found in $PATH", RUFF);
                 std::process::exit(1);
             }
         }
@@ -39,10 +46,10 @@ pub fn zapp(config: Config) {
 
     match walk(visitors, None) {
         Ok(_) => {
-            tracing::info!("Operation completed successfully.");
+            info!("Operation completed successfully.");
         }
         Err(e) => {
-            tracing::error!("Error: {:?}", e);
+            error!("Error: {:?}", e);
             std::process::exit(1);
         }
     }

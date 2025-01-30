@@ -16,16 +16,27 @@ pub struct RuffFormatVisitor {}
 impl IPythonEntityVisitor for RuffFormatVisitor {
     fn visit_python_directory(&mut self, visitable: &PythonDirectory) -> VisitResult {
         if visitable.filepath().is_root() {
-            tracing::info!("Running ruff on root directory");
-            let output = Command::new(RUFF)
+            tracing::info!("Running ruff format on root directory");
+
+            let format = Command::new(RUFF)
                 .arg("format")
+                .arg(".")
                 .output()
                 .map_err(|e| VfsError::from(e))?;
 
-            match output.status.success() {
+            tracing::info!("Running ruff check on root directory");
+            let check = Command::new(RUFF)
+                .arg("check")
+                .arg(".")
+                .arg("--select")
+                .arg("I")
+                .arg("--fix")
+                .output()
+                .map_err(|e| VfsError::from(e))?;
+
+            match format.status.success() && check.status.success() {
                 true => {
                     tracing::info!("Ruff succeeded");
-                    tracing::info!("{:?}", output);
                     Ok(())
                 }
                 false => Err(PythonFileSystemError::new(
