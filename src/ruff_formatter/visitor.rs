@@ -4,7 +4,7 @@ use vfs::VfsError;
 
 use crate::python_file_system::{
     directory::PythonDirectory,
-    errors::{PythonFileSystemError, PythonFileSystemErrorKind},
+    errors::{PfsError, PfsErrorKind},
     interface::{IPythonEntityVisitor, VisitResult},
     source_file::PythonSourceFile,
 };
@@ -39,8 +39,8 @@ impl IPythonEntityVisitor for RuffFormatVisitor {
                     tracing::info!("Ruff succeeded");
                     Ok(())
                 }
-                false => Err(PythonFileSystemError::new(
-                    PythonFileSystemErrorKind::PythonEntityVisitationError(
+                false => Err(PfsError::new(
+                    PfsErrorKind::PythonEntityVisitationError(
                         "Ruff Failed".to_string(),
                     ),
                     "Ruff failed to format the root directory".to_string(),

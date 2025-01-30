@@ -3,93 +3,88 @@ use std::{error, fmt};
 use vfs::VfsError;
 
 #[derive(Debug, PartialEq)]
-pub struct PythonFileSystemError {
+pub struct PfsError {
     /// The kind of error
-    kind: PythonFileSystemErrorKind,
+    kind: PfsErrorKind,
     /// An optional human-readable string describing the context for this error
     context: String,
 }
 
-impl PythonFileSystemError {
-    pub fn new(kind: PythonFileSystemErrorKind, context: String) -> Self {
-        PythonFileSystemError { kind, context }
+impl PfsError {
+    pub fn new(kind: PfsErrorKind, context: String) -> Self {
+        PfsError { kind, context }
     }
 
-    pub fn kind(&self) -> &PythonFileSystemErrorKind {
+    pub fn kind(&self) -> &PfsErrorKind {
         &self.kind
     }
 }
 
-pub type PythonFileSystemResult<T> = std::result::Result<T, PythonFileSystemError>;
+pub type PfsResult<T> = std::result::Result<T, PfsError>;
 
-impl From<PythonFileSystemErrorKind> for PythonFileSystemError {
-    fn from(kind: PythonFileSystemErrorKind) -> Self {
-        PythonFileSystemError {
+impl From<PfsErrorKind> for PfsError {
+    fn from(kind: PfsErrorKind) -> Self {
+        PfsError {
             kind,
             context: "An error occurred".into(),
         }
     }
 }
 
-impl From<VfsError> for PythonFileSystemError {
+impl From<VfsError> for PfsError {
     fn from(err: VfsError) -> Self {
-        Self::from(PythonFileSystemErrorKind::VfsError(err))
+        Self::from(PfsErrorKind::VfsError(err))
     }
 }
 
-impl fmt::Display for PythonFileSystemError {
+impl fmt::Display for PfsError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}: {}", self.kind(), self.context)
     }
 }
 
-impl error::Error for PythonFileSystemError {
+impl error::Error for PfsError {
     // source() is a method on the Error trait that returns the underlying cause of an error, if it is known.
     fn source(&self) -> Option<&(dyn error::Error + 'static)> {
         match self.kind() {
-            PythonFileSystemErrorKind::VfsError(err) => Some(err),
+            PfsErrorKind::VfsError(err) => Some(err),
             _ => None,
         }
     }
 }
 
 #[derive(Debug)]
-pub enum PythonFileSystemErrorKind {
+pub enum PfsErrorKind {
     VfsError(VfsError),
     FileSystemCreationError,
-    RootDirectoryCreationError,
-    DirectoryWithoutInitError,
+    DirectoryCreationError,
     PythonEntityVisitationError(String),
 }
 
-impl PartialEq for PythonFileSystemErrorKind {
+impl PartialEq for PfsErrorKind {
     fn eq(&self, other: &Self) -> bool {
-        use PythonFileSystemErrorKind::*;
+        use PfsErrorKind::*;
         match (self, other) {
             (VfsError(_), VfsError(_))
             | (FileSystemCreationError, FileSystemCreationError)
-            | (RootDirectoryCreationError, RootDirectoryCreationError)
-            | (DirectoryWithoutInitError, DirectoryWithoutInitError) => true,
+            | (DirectoryCreationError, DirectoryCreationError) => true,
             (PythonEntityVisitationError(a), PythonEntityVisitationError(b)) => a == b,
             _ => false,
         }
     }
 }
 
-impl fmt::Display for PythonFileSystemErrorKind {
+impl fmt::Display for PfsErrorKind {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            PythonFileSystemErrorKind::VfsError(err) => write!(f, "VFS error: {}", err),
-            PythonFileSystemErrorKind::FileSystemCreationError => {
+            PfsErrorKind::VfsError(err) => write!(f, "VFS error: {}", err),
+            PfsErrorKind::FileSystemCreationError => {
                 write!(f, "File system creation error")
             }
-            PythonFileSystemErrorKind::RootDirectoryCreationError => {
-                write!(f, "Root directory creation error")
-            }
-            PythonFileSystemErrorKind::DirectoryWithoutInitError => {
+            PfsErrorKind::DirectoryCreationError => {
                 write!(f, "Directory without __init__.py error")
             }
-            PythonFileSystemErrorKind::PythonEntityVisitationError(msg) => {
+            PfsErrorKind::PythonEntityVisitationError(msg) => {
                 write!(f, "Python entity visitation error: '{}'", msg)
             }
         }

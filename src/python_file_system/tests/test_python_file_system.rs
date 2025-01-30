@@ -3,7 +3,7 @@ use indoc::indoc;
 
 use crate::{
     python_file_system::{
-        errors::{PythonFileSystemError, PythonFileSystemErrorKind},
+        errors::{PfsError, PfsErrorKind},
         recurse::walk,
     },
     test_helpers::fixtures::TestVisitingFileTree,
@@ -28,9 +28,9 @@ fn error_if_top_level_directory_missing_init_file(fixture: TestVisitingFileTree)
         Some(&fixture.memfs),
     );
 
-    let expected_error = PythonFileSystemError::new(
-        PythonFileSystemErrorKind::RootDirectoryCreationError,
-        "Failed to created root directory".into(),
+    let expected_error = PfsError::new(
+        PfsErrorKind::DirectoryCreationError,
+        "Directory does not contain __init__.py".into(),
     );
 
     // Assert

@@ -4,7 +4,7 @@ use vfs::VfsPath;
 
 use super::{
     api_file::PythonApiFile,
-    errors::PythonFileSystemResult,
+    errors::PfsResult,
     factory::layer_factory,
     interface::{IPythonEntity, IPythonEntityVisitor, RunResult, VisitResult},
 };
@@ -20,7 +20,7 @@ pub struct PythonDirectory {
 }
 
 impl PythonDirectory {
-    pub fn new(root: &VfsPath) -> PythonFileSystemResult<PythonDirectory> {
+    pub fn new(root: &VfsPath) -> PfsResult<PythonDirectory> {
         let _paths: Vec<VfsPath> = root
             .read_dir()?
             .filter_map(|p| {

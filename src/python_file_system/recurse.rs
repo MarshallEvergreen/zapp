@@ -3,10 +3,10 @@ use std::path::PathBuf;
 use tracing::trace;
 use vfs::{PhysicalFS, VfsPath};
 
-use crate::python_file_system::errors::PythonFileSystemErrorKind;
+use crate::python_file_system::errors::PfsErrorKind;
 
 use super::{
-    errors::{PythonFileSystemError, PythonFileSystemResult},
+    errors::{PfsError, PfsResult},
     factory::layer_factory,
     interface::{IPythonEntity, IPythonEntityVisitor},
 };
@@ -14,7 +14,7 @@ use super::{
 pub fn walk(
     mut visitors: Vec<Box<dyn IPythonEntityVisitor>>,
     fs: Option<&VfsPath>,
-) -> PythonFileSystemResult<()> {
+) -> PfsResult<()> {
     let root: &VfsPath;
 
     // null pointer - only created if no file system is provided
@@ -25,8 +25,8 @@ pub fn walk(
         root = provided_fs;
     } else {
         tracing::warn!("No file system provided, using default.");
-        let cwd: PathBuf = std::env::current_dir()
-            .map_err(|_| PythonFileSystemErrorKind::FileSystemCreationError)?;
+        let cwd: PathBuf =
+            std::env::current_dir().map_err(|_| PfsErrorKind::FileSystemCreationError)?;
         tracing::info!(
             "Using current working directory as root: '{}'",
             cwd.display()
@@ -37,8 +37,8 @@ pub fn walk(
     }
 
     let _root_directory: Box<dyn IPythonEntity> = layer_factory(root)?.ok_or({
-        PythonFileSystemError::new(
-            PythonFileSystemErrorKind::RootDirectoryCreationError,
+        PfsError::new(
+            PfsErrorKind::DirectoryCreationError,
             "Failed to created root directory".into(),
         )
     })?;
