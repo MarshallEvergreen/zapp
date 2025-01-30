@@ -8,8 +8,8 @@ fn test_files_can_be_created(fixture: TestVisitingFileTree) -> googletest::Resul
     let file_1 = "python_1.py";
     let file_2 = "python_2.py";
 
-    fixture.create_file(file_1)?;
-    fixture.create_file(file_2)?;
+    fixture.create_file(file_1);
+    fixture.create_file(file_2);
 
     // Assert
     let file_1_exists = fixture.memfs.join(file_1)?.exists()?;
@@ -25,8 +25,8 @@ fn test_directories_can_be_created(fixture: TestVisitingFileTree) -> googletest:
     let file_1 = "foo/python_1.py";
     let file_2 = "bar/python_2.py";
 
-    fixture.create_file(file_1)?;
-    fixture.create_file(file_2)?;
+    fixture.create_file(file_1);
+    fixture.create_file(file_2);
 
     // Assert
     let foo_dir_exists = fixture.memfs.join("foo")?.exists()?;

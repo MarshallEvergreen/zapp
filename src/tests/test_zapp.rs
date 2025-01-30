@@ -17,7 +17,7 @@ fn error_if_top_level_directory_missing_init_file(fixture: TestVisitingFileTree)
             print("Hello World!")
     "#};
 
-    fixture.write_to_file(file_1, python_hello_world)?;
+    fixture.write_to_file(file_1, python_hello_world);
 
     // Act
     let result: PythonFileSystemResult<()> = walk(
@@ -42,8 +42,8 @@ fn create_api_created_if_root_directory_is_valid(fixture: TestVisitingFileTree) 
             print("Hello World!")
     "#};
 
-    fixture.create_file("__init__.py")?;
-    fixture.write_to_file(file_1, python_hello_world)?;
+    fixture.create_file("__init__.py");
+    fixture.write_to_file(file_1, python_hello_world);
 
     // Act
     walk(
@@ -56,7 +56,7 @@ fn create_api_created_if_root_directory_is_valid(fixture: TestVisitingFileTree) 
         from .python_1 import (hello_world)
     "#};
 
-    let actual_contents: String = fixture.read_file("__init__.py")?;
+    let actual_contents: String = fixture.read_file("__init__.py");
 
     verify_that!(actual_contents, eq(expected_contents))
 }
@@ -81,9 +81,9 @@ fn create_api_for_multiple_files(fixture: TestVisitingFileTree) -> Result<()> {
         import antigravity
     "#};
 
-    fixture.create_file("__init__.py")?;
-    fixture.write_to_file(file_1, python_hello_world)?;
-    fixture.write_to_file(file_2, python_anti_gravity)?;
+    fixture.create_file("__init__.py");
+    fixture.write_to_file(file_1, python_hello_world);
+    fixture.write_to_file(file_2, python_anti_gravity);
 
     // Act
     walk(
@@ -97,7 +97,7 @@ fn create_api_for_multiple_files(fixture: TestVisitingFileTree) -> Result<()> {
         from .python_2 import (antigravity)
     "#};
 
-    let actual_contents: String = fixture.read_file("__init__.py")?;
+    let actual_contents: String = fixture.read_file("__init__.py");
 
     verify_that!(actual_contents, eq(expected_contents))
 }
@@ -117,9 +117,9 @@ fn create_api_created_if_root_directory_is_valid_for_subdirectory(
             print("Hello World!")
     "#};
 
-    fixture.create_file("__init__.py")?;
-    fixture.create_file(init_file_submodule)?;
-    fixture.write_to_file(file_1, python_hello_world)?;
+    fixture.create_file("__init__.py");
+    fixture.create_file(init_file_submodule);
+    fixture.write_to_file(file_1, python_hello_world);
 
     // Act
     walk(
@@ -133,13 +133,13 @@ fn create_api_created_if_root_directory_is_valid_for_subdirectory(
         from .submodule_1 import (hello_world)
     "#};
 
-    let actual_top_level_contents: String = fixture.read_file("__init__.py")?;
+    let actual_top_level_contents: String = fixture.read_file("__init__.py");
 
     let expected_submodule_contents = indoc! {r#"
         from .python_1 import (hello_world)
     "#};
 
-    let actual_submodule_contents: String = fixture.read_file("submodule_1/__init__.py")?;
+    let actual_submodule_contents: String = fixture.read_file("submodule_1/__init__.py");
 
     verify_that!(actual_top_level_contents, eq(expected_top_level_contents))?;
     verify_that!(actual_submodule_contents, eq(expected_submodule_contents))

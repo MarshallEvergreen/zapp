@@ -2,7 +2,7 @@ use std::{error, fmt};
 
 use vfs::VfsError;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct PythonFileSystemError {
     /// The kind of error
     kind: PythonFileSystemErrorKind,
@@ -60,6 +60,20 @@ pub enum PythonFileSystemErrorKind {
     RootDirectoryCreationError,
     DirectoryWithoutInitError,
     PythonEntityVisitationError(String),
+}
+
+impl PartialEq for PythonFileSystemErrorKind {
+    fn eq(&self, other: &Self) -> bool {
+        use PythonFileSystemErrorKind::*;
+        match (self, other) {
+            (VfsError(_), VfsError(_))
+            | (FileSystemCreationError, FileSystemCreationError)
+            | (RootDirectoryCreationError, RootDirectoryCreationError)
+            | (DirectoryWithoutInitError, DirectoryWithoutInitError) => true,
+            (PythonEntityVisitationError(a), PythonEntityVisitationError(b)) => a == b,
+            _ => false,
+        }
+    }
 }
 
 impl fmt::Display for PythonFileSystemErrorKind {

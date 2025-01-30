@@ -44,7 +44,6 @@ pub fn walk(
     })?;
 
     visitors.iter_mut().for_each(|visitor| {
-        // TODO handle errors
         _root_directory.accept(visitor.as_mut()).unwrap_or_default();
     });
 
