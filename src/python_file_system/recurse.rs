@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use tracing::trace;
+use tracing::{info, trace, warn};
 use vfs::{PhysicalFS, VfsPath};
 
 use crate::python_file_system::errors::PfsErrorKind;
@@ -25,10 +25,10 @@ pub fn walk(
         trace!("File system provided.");
         root = provided_fs;
     } else {
-        tracing::warn!("No file system provided, using default.");
+        warn!("No file system provided, using default.");
         let cwd: PathBuf =
             std::env::current_dir().map_err(|_| PfsErrorKind::FileSystemCreationError)?;
-        tracing::info!(
+        info!(
             "Using current working directory as root: '{}'",
             cwd.display()
         );
