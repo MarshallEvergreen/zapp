@@ -31,6 +31,7 @@ pub fn walk(
             cwd.display()
         );
         _default_fs = Box::new(PhysicalFS::new(cwd).into());
+
         root = _default_fs.as_ref();
     }
 
