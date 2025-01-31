@@ -10,26 +10,6 @@ use crate::python_file_system::{
     source_file::PythonSourceFile,
 };
 
-pub struct ApiGeneratorVisitor {
-    submodule_apis: BTreeMap<String, BTreeMap<String, HashSet<String>>>,
-}
-
-impl ApiGeneratorVisitor {
-    pub fn new() -> Self {
-        ApiGeneratorVisitor {
-            submodule_apis: BTreeMap::new(),
-        }
-    }
-
-    fn insert_submodule_api(&mut self, visitable: &dyn IPythonEntity, api: HashSet<String>) {
-        let parent_key = visitable.parent().filename().as_str().to_string();
-        self.submodule_apis
-            .entry(parent_key)
-            .or_insert_with(BTreeMap::new)
-            .insert(visitable.name(), api);
-    }
-}
-
 fn python_file_public_api(file: &PythonSourceFile) -> PfsResult<HashSet<String>> {
     let mut public_api = HashSet::new();
 
@@ -59,6 +39,26 @@ fn python_file_public_api(file: &PythonSourceFile) -> PfsResult<HashSet<String>>
     trace!("Public API for {}: {:?}", file.name(), public_api);
 
     Ok(public_api)
+}
+
+pub struct ApiGeneratorVisitor {
+    submodule_apis: BTreeMap<String, BTreeMap<String, HashSet<String>>>,
+}
+
+impl ApiGeneratorVisitor {
+    pub fn new() -> Self {
+        ApiGeneratorVisitor {
+            submodule_apis: BTreeMap::new(),
+        }
+    }
+
+    fn insert_submodule_api(&mut self, visitable: &dyn IPythonEntity, api: HashSet<String>) {
+        let parent_key = visitable.parent().filename().as_str().to_string();
+        self.submodule_apis
+            .entry(parent_key)
+            .or_insert_with(BTreeMap::new)
+            .insert(visitable.name(), api);
+    }
 }
 
 impl IPythonEntityVisitor for ApiGeneratorVisitor {
