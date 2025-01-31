@@ -15,8 +15,8 @@ fn python_file_public_api(file: &PythonSourceFile) -> PfsResult<HashSet<String>>
 
     let contents = file.read_to_string()?;
 
-    let all_re = Regex::new(r"__all__\s*=\s*\[(.*?)\]").unwrap();
-    let all_re_multiline = Regex::new(r"__all__\s*=\s*\[(?s)(.*?)\]").unwrap();
+    let all_re = Regex::new(r"__all__\s*=\s*\[(.*?)\]")?;
+    let all_re_multiline = Regex::new(r"__all__\s*=\s*\[(?s)(.*?)\]")?;
 
     let maybe_all = all_re
         .captures(&contents)

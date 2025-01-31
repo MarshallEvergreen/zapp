@@ -37,6 +37,15 @@ impl From<VfsError> for PfsError {
     }
 }
 
+impl From<regex::Error> for PfsError {
+    fn from(err: regex::Error) -> Self {
+        PfsError {
+            kind: PfsErrorKind::VisitationError(format!("{}", err)),
+            context: "Regex Error.".into(),
+        }
+    }
+}
+
 impl fmt::Display for PfsError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}: {}", self.kind(), self.context)
