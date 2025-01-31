@@ -1,4 +1,4 @@
-use api_generator::api_generator_visitor::ApiGeneratorVisitor;
+use api_generator::visitor::ApiGeneratorVisitor;
 use python_file_system::{interface::IPythonEntityVisitor, recurse::walk};
 
 pub mod api_generator;

@@ -40,9 +40,7 @@ impl IPythonEntityVisitor for RuffFormatVisitor {
                     Ok(())
                 }
                 false => Err(PfsError::new(
-                    PfsErrorKind::PythonEntityVisitationError(
-                        "Ruff Failed".to_string(),
-                    ),
+                    PfsErrorKind::VisitationError("Ruff Failed".to_string()),
                     "Ruff failed to format the root directory".to_string(),
                 )),
             }

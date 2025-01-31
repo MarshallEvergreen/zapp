@@ -1,8 +1,11 @@
 use std::collections::{BTreeMap, HashSet};
 
+use regex::Regex;
+use tracing::trace;
+
 use crate::python_file_system::{
     directory::PythonDirectory,
-    errors::{PfsErrorKind, PfsError},
+    errors::{PfsError, PfsErrorKind, PfsResult},
     interface::{IPythonEntity, IPythonEntityVisitor, VisitResult},
     source_file::PythonSourceFile,
 };
@@ -27,6 +30,37 @@ impl ApiGeneratorVisitor {
     }
 }
 
+fn python_file_public_api(file: &PythonSourceFile) -> PfsResult<HashSet<String>> {
+    let mut public_api = HashSet::new();
+
+    let contents = file.read_to_string()?;
+
+    let all_re = Regex::new(r"__all__\s*=\s*\[(.*?)\]").unwrap();
+    let all_re_multiline = Regex::new(r"__all__\s*=\s*\[(?s)(.*?)\]").unwrap();
+
+    let maybe_all = all_re
+        .captures(&contents)
+        .or_else(|| all_re_multiline.captures(&contents));
+
+    if let Some(all) = maybe_all {
+        if let Some(matched) = all.get(1) {
+            public_api = matched
+                .as_str()
+                .split(',')
+                .map(|s| s.trim().trim_matches(|c| c == '"' || c == '\n' || c == ' '))
+                .filter(|s| !s.is_empty())
+                .map(|s| s.to_string())
+                .collect();
+        }
+    } else {
+        trace!("__all__ not found for {}", file.name());
+    }
+
+    trace!("Public API for {}: {:?}", file.name(), public_api);
+
+    Ok(public_api)
+}
+
 impl IPythonEntityVisitor for ApiGeneratorVisitor {
     fn visit_python_directory(&mut self, visitable: &PythonDirectory) -> VisitResult {
         let submodule_apis = self
@@ -35,7 +69,7 @@ impl IPythonEntityVisitor for ApiGeneratorVisitor {
             .ok_or_else(|| {
                 tracing::error!("Failed to find key {}", visitable.name());
                 PfsError::new(
-                    PfsErrorKind::PythonEntityVisitationError(format!(
+                    PfsErrorKind::VisitationError(format!(
                         "ApiGeneratorVisitor failed to find key {}",
                         visitable.name()
                     )),
@@ -52,7 +86,7 @@ impl IPythonEntityVisitor for ApiGeneratorVisitor {
     }
 
     fn visit_python_source_file(&mut self, visitable: &PythonSourceFile) -> VisitResult {
-        let api = visitable.api()?;
+        let api = python_file_public_api(visitable)?;
         self.insert_submodule_api(visitable, api);
         Ok(())
     }

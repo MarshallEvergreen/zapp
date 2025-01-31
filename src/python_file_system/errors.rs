@@ -58,7 +58,7 @@ pub enum PfsErrorKind {
     VfsError(VfsError),
     FileSystemCreationError,
     DirectoryCreationError,
-    PythonEntityVisitationError(String),
+    VisitationError(String),
 }
 
 impl PartialEq for PfsErrorKind {
@@ -68,7 +68,7 @@ impl PartialEq for PfsErrorKind {
             (VfsError(_), VfsError(_))
             | (FileSystemCreationError, FileSystemCreationError)
             | (DirectoryCreationError, DirectoryCreationError) => true,
-            (PythonEntityVisitationError(a), PythonEntityVisitationError(b)) => a == b,
+            (VisitationError(a), VisitationError(b)) => a == b,
             _ => false,
         }
     }
@@ -84,7 +84,7 @@ impl fmt::Display for PfsErrorKind {
             PfsErrorKind::DirectoryCreationError => {
                 write!(f, "Directory without __init__.py error")
             }
-            PfsErrorKind::PythonEntityVisitationError(msg) => {
+            PfsErrorKind::VisitationError(msg) => {
                 write!(f, "Python entity visitation error: '{}'", msg)
             }
         }

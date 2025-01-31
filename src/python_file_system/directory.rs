@@ -1,12 +1,10 @@
-use std::collections::{BTreeMap, HashSet};
-
 use vfs::VfsPath;
 
 use super::{
     api_file::PythonApiFile,
     errors::PfsResult,
     factory::entity_factory,
-    interface::{IPythonEntity, IPythonEntityVisitor, RunResult, VisitResult},
+    interface::{IPythonEntity, IPythonEntityVisitor, VisitResult},
 };
 
 const INIT_PY: &str = "__init__.py";
@@ -58,23 +56,6 @@ impl IPythonEntity for PythonDirectory {
 
     fn parent(&self) -> VfsPath {
         self.filepath.parent()
-    }
-
-    fn api(&self) -> RunResult {
-        let mut submodule_apis: BTreeMap<String, HashSet<String>> = BTreeMap::new();
-
-        for layer in &self.layers {
-            let api = layer.api()?;
-            submodule_apis.insert(layer.name(), api);
-        }
-
-        self.init_file.write(&submodule_apis)?;
-
-        let public_api: HashSet<String> = submodule_apis.values().cloned().flatten().collect();
-
-        tracing::info!("Public API for {}: {:?}", self.name(), public_api);
-
-        Ok(public_api)
     }
 
     fn accept(&self, visitor: &mut dyn IPythonEntityVisitor) -> VisitResult {

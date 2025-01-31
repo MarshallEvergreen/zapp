@@ -1,17 +1,12 @@
-use std::collections::HashSet;
-
 use vfs::VfsPath;
 
 use super::{directory::PythonDirectory, errors::PfsError, source_file::PythonSourceFile};
 
-pub type RunResult = Result<HashSet<String>, PfsError>;
 pub type VisitResult = Result<(), PfsError>;
 
 pub trait IPythonEntity {
     fn name(&self) -> String;
     fn parent(&self) -> VfsPath;
-
-    fn api(&self) -> RunResult;
     fn accept(&self, visitor: &mut dyn IPythonEntityVisitor) -> VisitResult;
 }
 
