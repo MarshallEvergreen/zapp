@@ -8,6 +8,7 @@ pub mod python_file_system;
 use ruff_formatter::visitor::RuffFormatVisitor;
 use tracing::{error, info, trace, Level};
 use tracing_subscriber::util::SubscriberInitExt;
+use vfs::VfsPath;
 use which::which;
 #[cfg(test)]
 pub mod test_helpers;
@@ -15,17 +16,21 @@ mod tests; // Include the test module conditionally for tests
 
 pub struct Config {
     pub rust_format: bool,
+    pub filesystem: Option<VfsPath>,
+    pub log_level: Option<Level>,
 }
 
 const RUFF: &str = "ruff"; // Change this to the program you want to check
 
 pub fn zapp(config: Config) {
-    tracing_subscriber::fmt()
-        // filter spans/events with level TRACE or higher.
-        .with_max_level(Level::TRACE)
-        // build but do not install the subscriber.
-        .finish()
-        .init();
+    if let Some(level) = config.log_level {
+        tracing_subscriber::fmt()
+            // filter spans/events with level TRACE or higher.
+            .with_max_level(level)
+            // build but do not install the subscriber.
+            .finish()
+            .init();
+    }
 
     let mut visitors: Vec<Box<dyn IPythonEntityVisitor>> = Vec::new();
 
@@ -45,7 +50,7 @@ pub fn zapp(config: Config) {
         }
     }
 
-    match walk(visitors, None) {
+    match walk(visitors, config.filesystem.as_ref()) {
         Ok(_) => {
             info!("Operation completed successfully.");
         }

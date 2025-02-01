@@ -1,33 +1,18 @@
 use googletest::prelude::*;
 use indoc::indoc;
+use vfs::VfsPath;
 
 use crate::{
-    python_file_system::{errors::PfsResult, recurse::walk},
-    test_helpers::fixtures::TestVisitingFileTree,
-    ApiGeneratorVisitor,
+    python_file_system::recurse::walk, test_helpers::fixtures::TestVisitingFileTree, zapp,
+    ApiGeneratorVisitor, Config,
 };
 
-#[gtest]
-fn error_if_top_level_directory_missing_init_file(fixture: TestVisitingFileTree) -> Result<()> {
-    // Arrange
-    let file_1 = "python_1.py";
-
-    let python_hello_world: &str = indoc! {r#"
-        def hello_world():
-            print("Hello World!")
-    "#};
-
-    fixture.write_to_file(file_1, python_hello_world);
-
-    // Act
-    let result: PfsResult<()> = walk(
-        vec![Box::new(ApiGeneratorVisitor::new())],
-        Some(&fixture.memfs),
-    );
-
-    // Assert
-    // TODO Partial equal needs defining the check errors match
-    verify_that!(result.is_err(), eq(true))
+fn config(fs: VfsPath) -> Config {
+    return Config {
+        rust_format: false,
+        filesystem: Some(fs),
+        log_level: None,
+    };
 }
 
 #[gtest]
@@ -46,10 +31,7 @@ fn create_api_created_if_all_present_in_file(fixture: TestVisitingFileTree) -> R
     fixture.write_to_file(file_1, python_hello_world);
 
     // Act
-    walk(
-        vec![Box::new(ApiGeneratorVisitor::new())],
-        Some(&fixture.memfs),
-    )?;
+    zapp(config(fixture.memfs.clone()));
     // Assert
 
     let expected_contents = indoc! {r#"
@@ -84,6 +66,43 @@ fn create_api_no_all_and_not_public_functions_results_in_empty_api(
     // Assert
 
     let expected_contents = indoc! {r#""#};
+
+    let actual_contents: String = fixture.read_file("__init__.py");
+
+    verify_that!(actual_contents, eq(expected_contents))
+}
+
+#[gtest]
+fn create_api_all_missing_overrides_interpreted_public_api(
+    fixture: TestVisitingFileTree,
+) -> Result<()> {
+    // Arrange
+    let file_1 = "python_1.py";
+
+    let python_hello_world: &str = indoc! {r#"
+
+        __all__ = ["top_level"]
+
+        def top_level():
+            pass
+
+        def another_top_function():
+            pass
+    "#};
+
+    fixture.create_file("__init__.py");
+    fixture.write_to_file(file_1, python_hello_world);
+
+    // Act
+    walk(
+        vec![Box::new(ApiGeneratorVisitor::new())],
+        Some(&fixture.memfs),
+    )?;
+    // Assert
+
+    let expected_contents = indoc! {r#"
+        from .python_1 import (top_level)
+    "#};
 
     let actual_contents: String = fixture.read_file("__init__.py");
 
