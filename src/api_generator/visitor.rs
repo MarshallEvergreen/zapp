@@ -48,9 +48,11 @@ fn python_file_public_api(file: &PythonSourceFile) -> PfsResult<BTreeSet<String>
         functions
             .captures_iter(&contents)
             .filter_map(|cap| cap.get(1).map(|matched| matched.as_str().to_string()))
-            .filter(|name| !name.starts_with("_"))
-            .for_each(|name| {
-                public_api.insert(name);
+            .for_each(|name| match name.strip_prefix('_') {
+                Some(_) => trace!("Omitted '{}' as it is assumed to be private", name),
+                None => {
+                    public_api.insert(name.to_string());
+                }
             });
     }
     trace!("Public API for {}: {:?}", file.name(), public_api);
