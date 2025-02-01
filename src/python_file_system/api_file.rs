@@ -1,4 +1,4 @@
-use std::collections::{BTreeMap, HashSet};
+use std::collections::{BTreeMap, BTreeSet};
 
 use vfs::{VfsError, VfsPath};
 
@@ -13,10 +13,7 @@ impl PythonApiFile {
         PythonApiFile { filepath }
     }
 
-    pub fn write(
-        &self,
-        api: &BTreeMap<String, HashSet<String>>,
-    ) -> Result<(), PfsError> {
+    pub fn write(&self, api: &BTreeMap<String, BTreeSet<String>>) -> Result<(), PfsError> {
         let mut content = String::new();
 
         for (key, values) in api {
