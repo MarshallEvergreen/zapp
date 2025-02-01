@@ -2,10 +2,7 @@ use googletest::prelude::*;
 use indoc::indoc;
 use vfs::VfsPath;
 
-use crate::{
-    python_file_system::recurse::walk, test_helpers::fixtures::TestVisitingFileTree, zapp,
-    ApiGeneratorVisitor, Config,
-};
+use crate::{test_helpers::fixtures::TestVisitingFileTree, zapp, Config};
 
 fn config(fs: VfsPath) -> Config {
     return Config {
@@ -59,10 +56,8 @@ fn create_api_no_all_and_not_public_functions_results_in_empty_api(
     fixture.write_to_file(file_1, python_hello_world);
 
     // Act
-    walk(
-        vec![Box::new(ApiGeneratorVisitor::new())],
-        Some(&fixture.memfs),
-    )?;
+    zapp(config(fixture.memfs.clone()));
+
     // Assert
 
     let expected_contents = indoc! {r#""#};
@@ -94,10 +89,7 @@ fn create_api_all_missing_overrides_interpreted_public_api(
     fixture.write_to_file(file_1, python_hello_world);
 
     // Act
-    walk(
-        vec![Box::new(ApiGeneratorVisitor::new())],
-        Some(&fixture.memfs),
-    )?;
+    zapp(config(fixture.memfs.clone()));
     // Assert
 
     let expected_contents = indoc! {r#"
@@ -128,10 +120,7 @@ fn create_api_interpreted_from_public_functions_if_all_missing(
     fixture.write_to_file(file_1, python_hello_world);
 
     // Act
-    walk(
-        vec![Box::new(ApiGeneratorVisitor::new())],
-        Some(&fixture.memfs),
-    )?;
+    zapp(config(fixture.memfs.clone()));
     // Assert
 
     let expected_contents = indoc! {r#"
@@ -164,10 +153,7 @@ fn create_api_interpreted_from_public_functions_nested_functions_are_ignored(
     fixture.write_to_file(file_1, python_hello_world);
 
     // Act
-    walk(
-        vec![Box::new(ApiGeneratorVisitor::new())],
-        Some(&fixture.memfs),
-    )?;
+    zapp(config(fixture.memfs.clone()));
     // Assert
 
     let expected_contents = indoc! {r#"
@@ -204,10 +190,7 @@ fn create_api_for_multiple_files(fixture: TestVisitingFileTree) -> Result<()> {
     fixture.write_to_file(file_2, python_anti_gravity);
 
     // Act
-    walk(
-        vec![Box::new(ApiGeneratorVisitor::new())],
-        Some(&fixture.memfs),
-    )?;
+    zapp(config(fixture.memfs.clone()));
     // Assert
 
     let expected_contents = indoc! {r#"
@@ -240,10 +223,7 @@ fn create_api_created_if_root_directory_is_valid_for_subdirectory(
     fixture.write_to_file(file_1, python_hello_world);
 
     // Act
-    walk(
-        vec![Box::new(ApiGeneratorVisitor::new())],
-        Some(&fixture.memfs),
-    )?;
+    zapp(config(fixture.memfs.clone()));
 
     // Assert
 
