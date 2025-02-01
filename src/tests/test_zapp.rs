@@ -99,10 +99,43 @@ fn create_api_interpreted_from_public_functions_if_all_missing(
 
     let python_hello_world: &str = indoc! {r#"
         def top_level():
-            print("I am a top-level function")
+            pass
 
-            def nested_function():
-                print("I am a nested function")
+        def another_top_function():
+            pass
+    "#};
+
+    fixture.create_file("__init__.py");
+    fixture.write_to_file(file_1, python_hello_world);
+
+    // Act
+    walk(
+        vec![Box::new(ApiGeneratorVisitor::new())],
+        Some(&fixture.memfs),
+    )?;
+    // Assert
+
+    let expected_contents = indoc! {r#"
+        from .python_1 import (another_top_function, top_level)
+    "#};
+
+    let actual_contents: String = fixture.read_file("__init__.py");
+
+    verify_that!(actual_contents, eq(expected_contents))
+}
+
+#[gtest]
+fn create_api_interpreted_from_public_functions_nested_functions_are_ignored(
+    fixture: TestVisitingFileTree,
+) -> Result<()> {
+    // Arrange
+    let file_1 = "python_1.py";
+
+    let python_hello_world: &str = indoc! {r#"
+        def top_level():
+            def nested():
+                pass
+            pass
 
         def another_top_function():
             pass
