@@ -10,7 +10,7 @@ use super::{
 const INIT_PY: &str = "__init__.py";
 
 pub struct PythonDirectory {
-    layers: Vec<Box<dyn IPythonEntity>>,
+    children: Vec<Box<dyn IPythonEntity>>,
     init_file: PythonApiFile,
 
     name: String,
@@ -37,7 +37,7 @@ impl PythonDirectory {
 
         Ok(PythonDirectory {
             init_file: PythonApiFile::new(root.join(INIT_PY)?),
-            layers: _layers,
+            children: _layers,
             name: root.filename().to_string(),
             filepath: root.clone(),
         })
@@ -63,9 +63,10 @@ impl IPythonEntity for PythonDirectory {
     }
 
     fn accept(&self, visitor: &mut dyn IPythonEntityVisitor) -> VisitResult {
-        for layer in &self.layers {
-            layer.accept(visitor)?;
+        for child in &self.children {
+            child.accept(visitor)?;
         }
         visitor.visit_python_directory(&self)
+        // TODO visit the init file here.
     }
 }
