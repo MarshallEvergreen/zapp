@@ -101,7 +101,7 @@ impl IPythonEntityVisitor for ApiGeneratorVisitor {
 
         let public_api: BTreeSet<String> = submodule_apis.values().cloned().flatten().collect();
         tracing::info!("Public API for {}: {:?}", visitable.name(), public_api);
-        visitable.init_file.write(&submodule_apis)?;
+        visitable.init_file().write(&submodule_apis)?;
 
         self.insert_submodule_api(visitable, public_api);
         Ok(())

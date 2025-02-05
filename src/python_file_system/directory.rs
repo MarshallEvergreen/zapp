@@ -10,8 +10,8 @@ use super::{
 const INIT_PY: &str = "__init__.py";
 
 pub struct PythonDirectory {
-    pub layers: Vec<Box<dyn IPythonEntity>>,
-    pub init_file: PythonApiFile,
+    layers: Vec<Box<dyn IPythonEntity>>,
+    init_file: PythonApiFile,
 
     name: String,
     filepath: VfsPath,
@@ -45,6 +45,10 @@ impl PythonDirectory {
 
     pub fn filepath(&self) -> &VfsPath {
         &self.filepath
+    }
+
+    pub fn init_file(&self) -> &PythonApiFile {
+        return &self.init_file;
     }
 }
 
