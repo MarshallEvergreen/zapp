@@ -1,2 +1,3 @@
+mod test_api_generator_assignments;
 mod test_api_generator_classes;
 mod test_api_generator_functions;

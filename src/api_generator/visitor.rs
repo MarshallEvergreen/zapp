@@ -54,8 +54,9 @@ fn python_file_public_api(file: &PythonSourceFile) -> PfsResult<BTreeSet<String>
 
         let functions = Regex::new(r"(?m)^def (\w+)\(")?;
         let classes = Regex::new(r"(?m)^class (\w+)\s*(?:\(|:)")?;
+        let assignments = Regex::new(r"(?m)^(\w+)\s*=")?;
 
-        let expressions = vec![&functions, &classes];
+        let expressions = vec![&functions, &classes, &assignments];
 
         expressions
             .iter()
