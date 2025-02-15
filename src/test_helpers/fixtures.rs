@@ -1,6 +1,8 @@
 use googletest::prelude::*;
 use vfs::{MemoryFS, SeekAndWrite, VfsPath};
 
+use crate::python_file_system::{interface::IPythonEntityVisitor, recurse::walk};
+
 pub struct TestVisitingFileTree {
     pub memfs: VfsPath,
 }
@@ -22,6 +24,10 @@ impl TestVisitingFileTree {
     pub fn read_file(&self, name: &str) -> String {
         let contents = self.memfs.join(name).unwrap().read_to_string().unwrap();
         return contents;
+    }
+
+    pub fn walk(&self, visitors: Vec<Box<dyn IPythonEntityVisitor>>) {
+        walk(visitors, Some(&self.memfs)).unwrap();
     }
 }
 
