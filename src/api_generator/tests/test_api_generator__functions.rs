@@ -14,12 +14,44 @@ fn api_visitor() -> Vec<Box<dyn IPythonEntityVisitor>> {
 }
 
 #[gtest]
-fn create_api_created_if_all_present_in_file(fixture: TestVisitingFileTree) -> Result<()> {
+fn create_api_created_if_all_list_present_in_file(fixture: TestVisitingFileTree) -> Result<()> {
     // Arrange
     let file_1 = "python_1.py";
 
     let python_hello_world: &str = indoc! {r#"
         __all__ = ["hello_world"]
+        
+        def hello_world():
+            print("Hello World!")
+    "#};
+
+    fixture.create_file("__init__.py");
+    fixture.write_to_file(file_1, python_hello_world);
+
+    // Act
+    fixture.walk(api_visitor());
+    // Assert
+
+    let expected_contents = indoc! {r#"
+        from .python_1 import (hello_world)
+    "#};
+
+    let actual_contents: String = fixture.read_file("__init__.py");
+
+    verify_that!(actual_contents, eq(expected_contents))
+}
+
+#[gtest]
+fn create_api_created_if_all_list_present_in_file_multiline(
+    fixture: TestVisitingFileTree,
+) -> Result<()> {
+    // Arrange
+    let file_1 = "python_1.py";
+
+    let python_hello_world: &str = indoc! {r#"
+        __all__ = [
+            "hello_world",
+        ]
         
         def hello_world():
             print("Hello World!")

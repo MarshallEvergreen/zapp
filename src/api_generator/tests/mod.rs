@@ -1,1 +1,1 @@
-mod test_api_generator;
+mod test_api_generator__functions;
