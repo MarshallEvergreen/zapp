@@ -10,6 +10,20 @@ use crate::python_file_system::{
     source_file::PythonSourceFile,
 };
 
+fn public_api_from_all_list(public_api: &mut BTreeSet<String>, all: regex::Captures<'_>) {
+    // TODO raise error here if more than 1 __all__ match
+    if let Some(matched) = all.get(1) {
+        matched
+            .as_str()
+            .split(',')
+            .map(|s| s.trim().trim_matches(|c| c == '"' || c == '\n' || c == ' '))
+            .filter(|s| !s.is_empty())
+            .for_each(|s| {
+                public_api.insert(s.to_string());
+            });
+    }
+}
+
 fn python_file_public_api(file: &PythonSourceFile) -> PfsResult<BTreeSet<String>> {
     let mut public_api = BTreeSet::new();
 
@@ -17,8 +31,6 @@ fn python_file_public_api(file: &PythonSourceFile) -> PfsResult<BTreeSet<String>
 
     let all_re = Regex::new(r"__all__\s*=\s*\[(.*?)\]")?;
     let all_re_multiline = Regex::new(r"__all__\s*=\s*\[(?s)(.*?)\]")?;
-
-    let functions = Regex::new(r"(?m)^def (\w+)\(")?;
 
     let maybe_all = all_re
         .captures(&contents)
@@ -29,22 +41,15 @@ fn python_file_public_api(file: &PythonSourceFile) -> PfsResult<BTreeSet<String>
             "__all__ found for '{}' - This will be used to define the public api",
             file.name()
         );
-        // TODO raise error here if more than 1 __all__ match
-        if let Some(matched) = all.get(1) {
-            matched
-                .as_str()
-                .split(',')
-                .map(|s| s.trim().trim_matches(|c| c == '"' || c == '\n' || c == ' '))
-                .filter(|s| !s.is_empty())
-                .for_each(|s| {
-                    public_api.insert(s.to_string());
-                });
-        }
+        public_api_from_all_list(&mut public_api, all);
     } else {
         trace!(
             "__all__ not found for '{}' public api will be built from public objects",
             file.name()
         );
+
+        let functions = Regex::new(r"(?m)^def (\w+)\(")?;
+
         functions
             .captures_iter(&contents)
             .filter_map(|cap| cap.get(1).map(|matched| matched.as_str().to_string()))
