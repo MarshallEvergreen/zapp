@@ -56,7 +56,8 @@ fn python_file_public_api(file: &PythonSourceFile) -> PfsResult<BTreeSet<String>
 
         functions
             .captures_iter(&contents)
-            .filter_map(|cap| cap.get(1).map(|matched| matched.as_str().to_string()))
+            .filter_map(|cap| cap.get(1))
+            .map(|match_| match_.as_str().to_string())
             .for_each(|name| match name.strip_prefix('_') {
                 Some(_) => trace!("Omitted '{}' as it is assumed to be private", name),
                 None => {
