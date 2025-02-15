@@ -96,3 +96,66 @@ fn create_api_private_classes_are_ignored(fixture: TestVisitingFileTree) -> Resu
 
     verify_that!(actual_contents, eq(expected_contents))
 }
+
+#[gtest]
+fn create_all_list_takes_preference_over_declared_classes(
+    fixture: TestVisitingFileTree,
+) -> Result<()> {
+    // Arrange
+    let file_1 = "python_1.py";
+
+    let contents: &str = indoc! {r#"
+
+        __all__ = ["Child"]
+
+        class Base:
+            pass
+
+        class Child(Base):
+            pass
+    "#};
+
+    fixture.create_file("__init__.py");
+    fixture.write_to_file(file_1, contents);
+
+    // Act
+    fixture.walk(api_visitor());
+    // Assert
+
+    let expected_contents = indoc! {r#"
+        from .python_1 import (Child)
+    "#};
+
+    let actual_contents: String = fixture.read_file("__init__.py");
+
+    verify_that!(actual_contents, eq(expected_contents))
+}
+
+#[gtest]
+fn create_api_nested_classes_are_ignored(fixture: TestVisitingFileTree) -> Result<()> {
+    // Arrange
+    let file_1 = "python_1.py";
+
+    let contents: &str = indoc! {r#"
+        class Base:
+            pass
+
+            class NestedChild:
+                pass
+    "#};
+
+    fixture.create_file("__init__.py");
+    fixture.write_to_file(file_1, contents);
+
+    // Act
+    fixture.walk(api_visitor());
+    // Assert
+
+    let expected_contents = indoc! {r#"
+        from .python_1 import (Base)
+    "#};
+
+    let actual_contents: String = fixture.read_file("__init__.py");
+
+    verify_that!(actual_contents, eq(expected_contents))
+}
