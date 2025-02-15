@@ -53,9 +53,13 @@ fn python_file_public_api(file: &PythonSourceFile) -> PfsResult<BTreeSet<String>
         );
 
         let functions = Regex::new(r"(?m)^def (\w+)\(")?;
+        let classes = Regex::new(r"(?m)^class (\w+)\s*(?:\(|:)")?;
 
-        functions
-            .captures_iter(&contents)
+        let expressions = vec![&functions, &classes];
+
+        expressions
+            .iter()
+            .flat_map(|r| r.captures_iter(&contents))
             .filter_map(|cap| cap.get(1))
             .map(|match_| match_.as_str().to_string())
             .for_each(|name| match name.strip_prefix('_') {
