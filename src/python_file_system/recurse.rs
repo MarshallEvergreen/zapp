@@ -40,6 +40,7 @@ pub fn walk(
     let _root_directory: PythonDirectory = create_python_directory(root)?;
 
     visitors.iter_mut().for_each(|visitor| {
+        // TODO handle the visitation error here.
         _root_directory.accept(visitor.as_mut()).unwrap_or_default();
     });
 

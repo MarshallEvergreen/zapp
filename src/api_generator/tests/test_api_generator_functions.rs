@@ -101,7 +101,7 @@ fn create_api_no_all_and_not_public_functions_results_in_empty_api(
 }
 
 #[gtest]
-fn create_api_all_missing_overrides_interpreted_public_api(
+fn create_api_all_list_present_overrides_interpreted_public_api(
     fixture: TestVisitingFileTree,
 ) -> Result<()> {
     // Arrange

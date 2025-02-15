@@ -10,8 +10,10 @@ use crate::python_file_system::{
     source_file::PythonSourceFile,
 };
 
-fn public_api_from_all_list(public_api: &mut BTreeSet<String>, all: regex::Captures<'_>) {
-    // TODO raise error here if more than 1 __all__ match
+fn public_api_from_all_list(
+    public_api: &mut BTreeSet<String>,
+    all: regex::Captures<'_>,
+) -> PfsResult<()> {
     if let Some(matched) = all.get(1) {
         matched
             .as_str()
@@ -22,6 +24,8 @@ fn public_api_from_all_list(public_api: &mut BTreeSet<String>, all: regex::Captu
                 public_api.insert(s.to_string());
             });
     }
+
+    Ok(())
 }
 
 fn python_file_public_api(file: &PythonSourceFile) -> PfsResult<BTreeSet<String>> {
@@ -41,7 +45,7 @@ fn python_file_public_api(file: &PythonSourceFile) -> PfsResult<BTreeSet<String>
             "__all__ found for '{}' - This will be used to define the public api",
             file.name()
         );
-        public_api_from_all_list(&mut public_api, all);
+        public_api_from_all_list(&mut public_api, all)?;
     } else {
         trace!(
             "__all__ not found for '{}' public api will be built from public objects",

@@ -1,7 +1,9 @@
 use googletest::prelude::*;
 use vfs::{MemoryFS, SeekAndWrite, VfsPath};
 
-use crate::python_file_system::{interface::IPythonEntityVisitor, recurse::walk};
+use crate::python_file_system::{
+    errors::PfsResult, interface::IPythonEntityVisitor, recurse::walk,
+};
 
 pub struct TestVisitingFileTree {
     pub memfs: VfsPath,
@@ -28,6 +30,11 @@ impl TestVisitingFileTree {
 
     pub fn walk(&self, visitors: Vec<Box<dyn IPythonEntityVisitor>>) {
         walk(visitors, Some(&self.memfs)).unwrap();
+    }
+
+    pub fn walk_with_result(&self, visitors: Vec<Box<dyn IPythonEntityVisitor>>) -> PfsResult<()> {
+        walk(visitors, Some(&self.memfs))?;
+        Ok(())
     }
 }
 
