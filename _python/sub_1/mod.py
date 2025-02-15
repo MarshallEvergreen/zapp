@@ -1,6 +1,9 @@
-__all__ = [
-    "hello_world_submodule",
-]
+ASSIGNMENT_SUBPACKAGE_1 = 1
+_PRIVATE_ASSIGNMENT_SUBPACKAGE_1 = 1
+
+
+class Submodule1Class:
+    pass
 
 
 def hello_world_submodule():
