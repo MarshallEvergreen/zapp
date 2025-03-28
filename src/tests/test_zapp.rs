@@ -6,7 +6,7 @@ use crate::{test_helpers::fixtures::TestVisitingFileTree, zapp, Config};
 
 fn config(fs: VfsPath) -> Config {
     return Config {
-        rust_format: false,
+        ruff_format: false,
         filesystem: Some(fs),
         log_level: None,
     };

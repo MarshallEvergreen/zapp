@@ -3,7 +3,7 @@ use zapp::{zapp, Config};
 
 fn main() {
     let config = Config {
-        rust_format: true,
+        ruff_format: true,
         filesystem: None,
         log_level: Some(Level::TRACE),
     };

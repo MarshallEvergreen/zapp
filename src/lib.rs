@@ -15,7 +15,7 @@ pub mod test_helpers;
 mod tests; // Include the test module conditionally for tests
 
 pub struct Config {
-    pub rust_format: bool,
+    pub ruff_format: bool,
     pub filesystem: Option<VfsPath>,
     pub log_level: Option<Level>,
 }
@@ -36,7 +36,7 @@ pub fn zapp(config: Config) {
 
     visitors.push(Box::new(ApiGeneratorVisitor::new()));
 
-    if config.rust_format {
+    if config.ruff_format {
         trace!("Checking for the presence of '{}'", RUFF);
         match which(RUFF) {
             Ok(path) => {
