@@ -32,6 +32,8 @@ pub fn zapp(config: Config) {
             .init();
     }
 
+    info!("Zapping Python files 🐍⚡️");
+
     let mut visitors: Vec<Box<dyn IPythonEntityVisitor>> = Vec::new();
 
     visitors.push(Box::new(ApiGeneratorVisitor::new()));
@@ -52,7 +54,7 @@ pub fn zapp(config: Config) {
 
     match walk(visitors, config.filesystem.as_ref()) {
         Ok(_) => {
-            info!("Operation completed successfully.");
+            info!("Files zapped 🐍⚡️");
         }
         Err(e) => {
             error!("Error: {:?}", e);
