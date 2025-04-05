@@ -39,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: wheels-linux-${{ matrix.platform.target }}
-          path: release-dists
+          path: dist
   macos:
     runs-on: ${{ matrix.platform.runner }}
     strategy:
@@ -61,7 +61,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: wheels-macos-${{ matrix.platform.target }}
-          path: release-dists
+          path: dist
 
   sdist:
     runs-on: ubuntu-22.04
@@ -76,7 +76,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: wheels-sdist
-          path: release-dists
+          path: dist
 
   pypi-publish:
     runs-on: ubuntu-latest
@@ -92,10 +92,10 @@ jobs:
       - name: Retrieve release distributions
         uses: actions/download-artifact@v4
         with:
-          name: release-dists
-          path: dist/
+          name: dist
+          path: upload/
 
       - name: Publish release distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          packages-dir: dist/
+          packages-dir: upload/
