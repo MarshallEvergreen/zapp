@@ -1,0 +1,10 @@
+[build-system]
+requires = ["maturin>=1.0"]
+build-backend = "maturin"
+
+[project]
+name = "zapp"
+version = "0.1.0"
+
+[tool.maturin]
+bindings = "bin"
