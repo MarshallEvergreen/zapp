@@ -10,5 +10,9 @@ version = "0.1.0"
 bindings = "bin"
 
 [tool.semantic_release]
-version_variable = ["pyproject.toml:version", "Cargo.toml:version"]
+tag_format = "v{version}"
+version_toml = [
+    "pyproject.toml:project.version:nf",
+    "Cargo.toml:package.version:nf",
+]
 branch = "main"
