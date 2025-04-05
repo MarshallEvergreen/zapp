@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.2.4 (2025-04-05)
+
+### Bug Fixes
+
+- **build**: More package versions
+  ([`0f681a8`](https://github.com/MarshallEvergreen/zapp/commit/0f681a8d6dc0e094bca46dc0b35f6b954a591266))
+
+
 ## v0.2.3 (2025-04-05)
 
 ### Bug Fixes
