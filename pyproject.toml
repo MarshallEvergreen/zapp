@@ -8,3 +8,7 @@ version = "0.1.0"
 
 [tool.maturin]
 bindings = "bin"
+
+[tool.semantic_release]
+version_variable = ["pyproject.toml:version", "Cargo.toml:version"]
+branch = "main"
