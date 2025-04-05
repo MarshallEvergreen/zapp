@@ -16,14 +16,16 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build release distributions
-        run: |
-          maturin build -r
+        uses: PyO3/maturin-action@v1
+        with:
+          command: build
+          args: --release --out dist
 
       - name: Upload distributions
         uses: actions/upload-artifact@v4
         with:
-          name: release-dists
-          path: target/wheels/*.whl
+          name: wheels
+          path: dist
 
   pypi-publish:
     runs-on: ubuntu-latest
@@ -40,10 +42,11 @@ jobs:
       - name: Retrieve release distributions
         uses: actions/download-artifact@v4
         with:
-          name: release-dists
-          path: dist/
+          name: wheels
+          path: dist
 
       - name: Publish release distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          packages-dir: dist/
+          packages-dir: dist
+          skip-existing: true
