@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.2.0 (2025-04-05)
+
+### Features
+
+- **maturin**: Add build
+  ([`3df596b`](https://github.com/MarshallEvergreen/zapp/commit/3df596b90cd361bedd1f2ecadc5894e86da3a901))
+
+
 ## v0.1.0 (2025-04-05)
 
 ### Bug Fixes
