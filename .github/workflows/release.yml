@@ -17,6 +17,7 @@ jobs:
 
       - name: Build release distributions
         run: |
+          cargo build -r
           maturin build -r
 
       - name: Upload distributions
