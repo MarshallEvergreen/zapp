@@ -1,12 +1,23 @@
 # CHANGELOG
 
 
+## v0.2.3 (2025-04-05)
+
+### Bug Fixes
+
+- **merge**: Orig file
+  ([`ec09fdf`](https://github.com/MarshallEvergreen/zapp/commit/ec09fdf8e6c2c16d346a3b6ff1ccec087f7b8ade))
+
+
 ## v0.2.2 (2025-04-05)
 
 ### Bug Fixes
 
 - **action**: Update release.yml
   ([`d20c162`](https://github.com/MarshallEvergreen/zapp/commit/d20c16237d81e48732f4ac6fc165d074ac312203))
+
+- **release**: Use materuin docker base
+  ([`9f7e1f0`](https://github.com/MarshallEvergreen/zapp/commit/9f7e1f0f6bf577cf43f00dd65dd1f3b972d41382))
 
 
 ## v0.2.1 (2025-04-05)
