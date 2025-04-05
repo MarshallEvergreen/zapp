@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.2.1 (2025-04-05)
+
+### Bug Fixes
+
+- **release**: Dispatch
+  ([`8d44d23`](https://github.com/MarshallEvergreen/zapp/commit/8d44d23368aee7e8999f0b496d2efea82e654c21))
+
+
 ## v0.2.0 (2025-04-05)
 
 ### Features
