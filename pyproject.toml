@@ -13,6 +13,7 @@ bindings = "bin"
 tag_format = "v{version}"
 version_toml = [
     "pyproject.toml:project.version:nf",
+    "pixi.toml:project.version:nf",
     "Cargo.toml:package.version:nf",
 ]
 branch = "main"
