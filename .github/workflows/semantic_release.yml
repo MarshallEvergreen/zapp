@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Setup | Checkout Repository on Release Branch
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Semantic Release | Install Python
         # https://python-semantic-release.readthedocs.io/en/latest/automatic-releases/github-actions.html#examples
