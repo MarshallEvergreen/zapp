@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.2.6 (2025-04-05)
+
+### Bug Fixes
+
+- **release**: Multiple downloads
+  ([`b0bb503`](https://github.com/MarshallEvergreen/zapp/commit/b0bb503c498841c75bc49ffe1357dfd13214519c))
+
+
 ## v0.2.5 (2025-04-05)
 
 
