@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.2.2 (2025-04-05)
+
+### Bug Fixes
+
+- **action**: Update release.yml
+  ([`d20c162`](https://github.com/MarshallEvergreen/zapp/commit/d20c16237d81e48732f4ac6fc165d074ac312203))
+
+
 ## v0.2.1 (2025-04-05)
 
 ### Bug Fixes
