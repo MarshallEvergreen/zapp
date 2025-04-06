@@ -28,8 +28,7 @@
 
 This software uses the following open source packages:
 
-<!-- Credit the main rust packages used. -->
-<!-- * [Electron](http://electron.atom.io/) -->
+* [Maturin](https://github.com/PyO3/maturin)
 
 ## License
 
