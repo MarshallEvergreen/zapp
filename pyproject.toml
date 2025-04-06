@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "python-zapp"
-version = "0.2.6"
+version = "0.3.0"
 description = "Python package for zapp"
 license = "MIT"
 readme = "README.md"
