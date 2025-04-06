@@ -9,5 +9,8 @@
         "zapp"
     ],
     "mypy.runUsingActiveInterpreter": true,
-    "ruff.lint.run": "onSave"
+    "ruff.lint.run": "onSave",
+    "python.analysis.autoFormatStrings": true,
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.includeAliasesFromUserFiles": true
 }
