@@ -1,6 +1,22 @@
 # CHANGELOG
 
 
+## v0.3.0 (2025-04-06)
+
+### Chores
+
+- **credit**: Maturin
+  ([`46691a3`](https://github.com/MarshallEvergreen/zapp/commit/46691a364da76fb5f6da66985904d4b85ae3c830))
+
+### Features
+
+- **readme**: Added information to the readme
+  ([`621bfb3`](https://github.com/MarshallEvergreen/zapp/commit/621bfb35ccbd339c058ecb183d35e90cada0fd7e))
+
+- **vscode**: Added useful settings
+  ([`cdda9e5`](https://github.com/MarshallEvergreen/zapp/commit/cdda9e5be00b3f699ca3b59847a74374461de6be))
+
+
 ## v0.2.6 (2025-04-05)
 
 ### Bug Fixes
