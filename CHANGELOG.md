@@ -1,7 +1,15 @@
 # CHANGELOG
 
 
+## v0.3.1 (2025-04-06)
+
+
 ## v0.3.0 (2025-04-06)
+
+### Bug Fixes
+
+- **release**: Disable broken linux build
+  ([`c57bef3`](https://github.com/MarshallEvergreen/zapp/commit/c57bef38853532af00ac57780b88461ae99b1bd9))
 
 ### Chores
 
